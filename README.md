@@ -46,15 +46,12 @@ password|
 created_at_timestamp=now()|
 reset_token|
 
-vehicles|
-:----
-vin|
-
 user_listings|
 :----
 id|
 user_id|
 vehicle_vin|
+vehicle_info|
 created_at_timestamp=now()|
 start_at_timestamp=now()|
 start_at_price=0|
@@ -62,17 +59,6 @@ end_date|
 is_active=FALSE|
 is_complete=FALSE|
 winning_bid_id=NULL|
-
-vehicle_photos|
-:----
-id|
-storage_path|
-mime_type|
-file_ending|
-created_at_timestamp=now()|
-created_by_user_id|
-vehicle_vin|
-user_listing_id|
 
 user_bid|
 :----
@@ -90,21 +76,17 @@ currency=USD|
     - JWT
 - Vehicle Listing Creation/Management
     - Create a listing
-        - Attach photos and arbitrary description/info
-        - Define starting bid and end date
-        - Cancel/delete
-- VIN validation/decoding service
-    - Leverage third party service to perform lookups
-    - Auto-supply available vehicle info
-    - No DB storage, Redis/in memory only
+      - Supply arbitrary info
+      - Define starting bid and end date
 - Active Listing
-    - User bidding (latest bid must exceed most recent winning bid)
-    - Render active/completed and winning user/price
+  - User bidding (latest bid must exceed most recent winning bid)
+  - Render active/completed and winning user/price
 - Unit Testing
 - Endpoint Testing (for customized endpoints)
 
 ### Stretch Goals:
 - Leverage websockets/pub-sub pattern for listings to auto-update UI as bids flow in
+- VIN validation/decoding service
 
 ### Nice to Haves and Features that will not be completed
 - User Authentication
@@ -112,8 +94,15 @@ currency=USD|
     - Forgot Password and Account Delete
 - User Notification System
     - In-app and email notifications for bid/listing activity to subscribed user(s)
-- Remote Secure File Storage
-    - Ideally a solution like S3 is leveraged for file storing and supports more than photos, but for simplicity, local filesystem and limited photo types will be allowed.
+- Vehicle Listing Creation/Management
+  - Attach files
+    - Remote Secure File Storage
+      - Ideally a solution like S3 is leveraged for file storing and supports more than photos
+  - cancel/delete
+- VIN validation/decoding service
+  - Leverage third party service to perform lookups
+  - Auto-supply available vehicle info
+  - No DB storage, Redis/in memory only
 - Event Driven Bidding System
     - Active UI updates as bids flow in. This could be implemented using web sockets.
 - Currency Management/Translation
