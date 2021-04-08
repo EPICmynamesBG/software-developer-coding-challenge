@@ -1,0 +1,8 @@
+Error:
+  $ref: './Error.yaml'
+UnauthorizedError:
+  $ref: './UnauthorizedError.yaml'
+BadRequest:
+  $ref: './BadRequest.yaml'
+Empty:
+  $ref: './Empty.yaml'

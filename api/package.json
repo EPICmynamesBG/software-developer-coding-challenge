@@ -1,0 +1,56 @@
+{
+  "name": "trdrev-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "~14.16.1",
+    "npm": "~6.14.12"
+  },
+  "scripts": {
+    "prestart": "npm run buildSwagger",
+    "start": "node app.js",
+    "pretest": "eslint --ignore-path .gitignore .",
+    "test": "swagger project test",
+    "buildSwagger": "node ./bin/buildSwagger.js",
+    "docs:build": "documentation build src/** -f html -o docs -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
+    "docs:build:json": "documentation build src/** -f json -o docs/docs.json -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
+    "docs:build:md": "documentation build src/** -f md -o docs/docs.md -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
+    "docs:serve": "documentation serve src/** -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
+    "docs:serve:live": "documentation serve --watch src/** -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
+    "docs:lint": "documentation lint src/**",
+    "lint:fix": "eslint --ignore-path .gitignore . --fix"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "bcrypt": "^3.0.2",
+    "cors": "^2.8.5",
+    "crypto-js": "^3.1.9-1",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.4",
+    "js-yaml": "^3.12.0",
+    "json-refs": "^3.0.12",
+    "jsonwebtoken": "^8.4.0",
+    "knex": "^0.14.6",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
+    "nhtsa": "^1.2.7",
+    "oauth": "^0.9.15",
+    "objection": "^1.4.0",
+    "pg": "^7.6.1",
+    "request": "^2.88.0",
+    "sinon": "^5.1.1",
+    "swagger-parser": "^4.1.0",
+    "swagger-tools": "^0.10.4",
+    "uuid": "^3.3.2",
+    "winston": "^2.4.4"
+  },
+  "devDependencies": {
+    "documentation": "^8.1.2",
+    "eslint": "^5.9.0",
+    "should": "^7.1.0",
+    "supertest": "^3.3.0"
+  }
+}

@@ -1,0 +1,6 @@
+in: query
+name: page
+type: number
+description: optional page number
+required: false
+default: 0

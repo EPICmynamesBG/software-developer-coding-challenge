@@ -1,0 +1,6 @@
+in: query
+name: pageSize
+type: number
+description: optional page size
+required: false
+default: 50

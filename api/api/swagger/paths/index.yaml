@@ -1,0 +1,8 @@
+'/accounts':
+  $ref: './accounts.yaml'
+'/accounts/me':
+  $ref: './accounts_me.yaml'
+'/accounts/login':
+  $ref: './accounts_login.yaml'
+'/accounts/refresh':
+  $ref: './accounts_refresh.yaml'

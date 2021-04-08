@@ -1,0 +1,4 @@
+in: path
+name: accountListingId
+type: string
+required: true

@@ -1,0 +1,15 @@
+required:
+  - statusCode
+  - message
+properties:
+  statusCode:
+    type: number
+  message:
+    type: string
+  action:
+    type: string
+    description: some modifying action type
+    enum:
+      - CREATE
+      - UPDATE
+      - DELETE

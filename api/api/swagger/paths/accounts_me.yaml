@@ -1,0 +1,18 @@
+x-swagger-router-controller: AccountController
+get:
+  summary: Get Logged in Account
+  description: Returns this account
+  operationId: me
+  tags:
+    - Account
+  security:
+    - BearerAuth: []
+  responses:
+    "200":
+      description: Success
+      schema:
+        $ref: "#/definitions/Account"
+    "401":
+      $ref: "#/responses/UnauthorizedError"
+    default:
+      $ref: "#/responses/Error"

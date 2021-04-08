@@ -1,0 +1,5 @@
+in: path
+name: accountId
+type: string
+description: unique Account identifier
+required: true

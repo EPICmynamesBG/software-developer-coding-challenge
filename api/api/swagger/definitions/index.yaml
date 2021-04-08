@@ -1,0 +1,6 @@
+ErrorResponse:
+  $ref: './ErrorResponse.yaml'
+Token:
+  $ref: './Token.yaml'
+action:
+  $ref: './action.yaml'

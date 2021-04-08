@@ -1,0 +1,6 @@
+description: Authentication information is missing or invalid
+headers:
+  WWW_Authenticate:
+    type: string
+schema:
+  $ref: '#/definitions/ErrorResponse'

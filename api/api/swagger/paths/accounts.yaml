@@ -1,0 +1,41 @@
+x-swagger-router-controller: AccountController
+post:
+  summary: Create
+  description: Create an account
+  # used as the method name of the controller
+  operationId: create
+  tags:
+    - Account
+  parameters:
+    - in: body
+      name: body
+      description: Login credentials
+      required: true
+      schema:
+        type: object
+        required:
+          - email
+          - password
+          - confirmPassword
+        properties:
+          email:
+            type: string
+            format: 'email'
+            example: 'johnny.appleseed@example.org'
+          password:
+            type: string
+            example: '********'
+            pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})'
+            description: "Passwords must be 8+ chars and include 1+ upper case, lower case, numbers, and special chars"
+          confirmPassword:
+            type: string
+            example: '********'
+            pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})'
+  responses:
+    "200":
+      description: Success
+      schema:
+        $ref: "#/definitions/Account"
+    # responses may fall through to errors
+    default:
+      $ref: "#/responses/Error"

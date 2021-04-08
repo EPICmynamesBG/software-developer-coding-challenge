@@ -1,0 +1,33 @@
+swagger: "2.0"
+info:
+  version: "{{version}}"
+  title: KickSaaS
+# during dev, should point to your local machine
+host: "localhost:{{port}}"
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  - multipart/form-data
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+  $ref: './paths/index.yaml'
+definitions:
+  $ref: './definitions/index.yaml'
+parameters:
+  $ref: './parameters/index.yaml'
+responses:
+  $ref: './responses/index.yaml'

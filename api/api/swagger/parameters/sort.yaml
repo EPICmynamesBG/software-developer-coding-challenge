@@ -1,0 +1,9 @@
+in: query
+name: sort
+type: array
+description: "sort priority, ie: +name"
+required: false
+default: []
+items:
+  type: string
+collectionFormat: multi

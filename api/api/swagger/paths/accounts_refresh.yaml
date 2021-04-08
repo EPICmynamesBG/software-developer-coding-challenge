@@ -1,0 +1,18 @@
+x-swagger-router-controller: AccountController
+get:
+  summary: Token Refresh
+  description: Receive a new token
+  # used as the method name of the controller
+  operationId: refresh
+  tags:
+    - Account
+  security:
+    - BearerAuth: []
+  responses:
+    "200":
+      description: Success
+      schema:
+        $ref: "#/definitions/Token"
+    # responses may fall through to errors
+    default:
+      $ref: "#/responses/Error"
