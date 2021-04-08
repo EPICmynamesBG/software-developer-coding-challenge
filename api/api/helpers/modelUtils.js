@@ -4,6 +4,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const { ValidationError } = require('objection');
 const { UUID } = require('./constants');
+const { HttpError } = require('./utils');
 
 /**
  * @param  {string} str string to validate as UUID
@@ -167,6 +168,28 @@ function applySort(query, sort) {
   return query.orderBy(column, sortDir);
 }
 
+const EQ_MAP = {
+  'eq': '=',
+  'lte': '<=',
+  'gte': '>=',
+  'gt': '>',
+  'lt': '<',
+  'not': '!='
+};
+
+function convertFilterStringToArgs(filterString) {
+  const pattern = new RegExp(`(.*)\\[(${Object.keys(EQ_MAP).join('|')})\\]\\=(.*)`);
+  if (!pattern.test(filterString)) {
+    throw new HttpError(`Invalid filter pattern "${filterString}"`, 400);
+  }
+  const [,
+    field,
+    equality,
+    value
+  ] = filterString.match(pattern);
+  return [field, EQ_MAP[equality], value];
+}
+
 module.exports = {
   validUuid,
   iterateSchema,
@@ -174,5 +197,6 @@ module.exports = {
   castDateTimeToMoment,
   validateUuids,
   datesToString,
-  applySort
+  applySort,
+  convertFilterStringToArgs
 };

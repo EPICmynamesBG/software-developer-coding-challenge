@@ -84,7 +84,7 @@ class AccountController extends BaseController {
       return;
     }
 
-    return this.responder('create', res, this.service.create({ email, password }));
+    return this.responder('create', res, () => this.service.create({ email, password }));
   }
 }
 

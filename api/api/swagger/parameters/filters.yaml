@@ -1,0 +1,8 @@
+in: query
+name: filters
+type: array
+description: "filter fields"
+required: false
+items:
+  type: string
+collectionFormat: multi

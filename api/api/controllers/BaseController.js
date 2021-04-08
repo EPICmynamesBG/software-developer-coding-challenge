@@ -49,9 +49,9 @@ class BaseController {
     return [];
   }
 
-  async responder(action, response, promise) {
+  async responder(action, response, asyncFn) {
     try {
-      const results = await promise;
+      const results = await asyncFn();
       switch (_.toLower(action)) {
       case 'create':
       case 'update':
@@ -66,70 +66,71 @@ class BaseController {
         handleResponse(undefined, results, response);
       }
     } catch (e) {
+      console.log('HERE', e);
       handleResponse(e, undefined, response);
     }
     return;
   }
 
-  async create(req, res) {
+  create(req, res) {
     return this.responder('create', res, this.service.create(req.body))
   }
 
-  async createWithPathIds(req, res) {
+  createWithPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
     const createObj = { ...snakeCaseKeys(req.body), ...pathIds };
-    return this.responder('create', res, this.service.create(createObj));
+    return this.responder('create', res, () => this.service.create(createObj));
   }
 
-  async getAll(req, res) {
+  getAll(req, res) {
     let queryParams;
     if (this.pagination) {
       queryParams = this.constructor.Helper.getQueryParams(req);
     }
-    return this.responder('select', res, this.service.getAll(queryParams));
+    return this.responder('select', res, () => this.service.getAll(queryParams));
   }
 
-  async getAllByPathIds(req, res) {
+  getAllByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
     let queryParams;
     if (this.pagination) {
       queryParams = this.constructor.Helper.getQueryParams(req);
     }
-    return this.responder('select', res, this.service.find(pathIds, queryParams));
+    return this.responder('select', res, () => this.service.find(pathIds, queryParams));
   }
 
-  async getById(req, res) {
+  getById(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
-    return this.responder('select', res, this.service.getById(id));
+    return this.responder('select', res, () => this.service.getById(id));
   }
 
-  async getByPathIds(req, res) {
+  getByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
-    return this.responder('select', res, this.service.findOne(pathIds));
+    return this.responder('select', res, () => this.service.findOne(pathIds));
   }
 
-  async updateById(req, res) {
+  updateById(req, res) {
     const currentId = _.get(req, 'swagger.params.id.value');
     // intentionally prevent updating id
     const body = _.omit(snakeCaseKeys(req.body), ['id']);
-    return this.responder('update', res, this.service.updateById(currentId, body));
+    return this.responder('update', res, () => this.service.updateById(currentId, body));
   }
 
-  async updateByPathIds(req, res) {
+  updateByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
     // intentionally prevent updating id
     const body = _.omit(snakeCaseKeys(req.body), ['id']);
-    return this.responder('update', res, this.service.update(pathIds, body));
+    return this.responder('update', res, () => this.service.update(pathIds, body));
   }
 
-  async deleteById(req, res) {
+  deleteById(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
-    return this.responder('delete', res, this.service.deleteById(id));
+    return this.responder('delete', res, () => this.service.deleteById(id));
   }
 
-  async deleteByPathIds(req, res) {
+  deleteByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
-    return this.responder('delete', res, this.service.delete(pathIds));
+    return this.responder('delete', res, () => this.service.delete(pathIds));
   }
 
   static get BaseRoute() {
@@ -194,6 +195,8 @@ class BaseController {
       $ref: '#/parameters/pageSize'
     }, {
       $ref: '#/parameters/sort'
+    }, {
+      $ref: '#/parameters/filters'
     }];
 
     const routes = {

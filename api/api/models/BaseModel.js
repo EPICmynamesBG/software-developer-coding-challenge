@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const { Model } = require('objection');
 const { HttpError } = require('../helpers/utils');
-const { castDateTimeToMoment, validateUuids, datesToString } = require('../helpers/modelUtils');
+const { castDateTimeToMoment, validateUuids, datesToString, convertFilterStringToArgs } = require('../helpers/modelUtils');
 
 class BaseQueryBuilder extends Model.QueryBuilder {
   logQuery() {
@@ -29,6 +29,17 @@ class BaseQueryBuilder extends Model.QueryBuilder {
   sort(sort = []) {
     return sort.reduce(
       (builder, sortStr) => modelUtils.applySort(builder, sortSrt),
+      this
+    );
+  }
+
+  filters(filters = []) {
+    console.log(filters);
+    return filters.reduce(
+      (builder, filterString) => {
+        const args = convertFilterStringToArgs(filterString);
+        return builder.where(...args);
+      },
       this
     );
   }

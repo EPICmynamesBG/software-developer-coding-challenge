@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 /**
  * @typedef {Pagination}
  * @type {object}
@@ -26,8 +28,26 @@ class BaseService {
       .sort(pagination.sort);
   }
 
+
+  static applyFilters(query, pagination) {
+    if (!pagination) {
+      return query;
+    }
+    return query
+      .filters(pagination.filters);
+  }
+
   constructor(modelClass) {
     this.modelClass = modelClass;
+  }
+
+  static applyQueryFlow(query, pagination) {
+    const applyMethods = _.flow(
+      qry => this.applyFilters(qry, pagination),
+      qry => this.applySort(qry, pagination),
+      qry => this.applyPagination(qry, pagination)
+    );
+    return applyMethods(query);
   }
 
   create(collection) {
@@ -39,13 +59,7 @@ class BaseService {
   getAll(pagination) {
     const query = this.modelClass.query()
       .select('*');
-    return this.constructor.applySort(
-      this.constructor.applyPagination(
-        query,
-        pagination
-      ),
-      pagination
-    );
+    return this.constructor.applyQueryFlow(query, pagination);
   }
 
   find(params, pagination) {
@@ -53,13 +67,7 @@ class BaseService {
       .select('*')
       .where(params);
 
-    return this.constructor.applySort(
-      this.constructor.applyPagination(
-        query,
-        pagination
-      ),
-      pagination
-    );
+    return this.constructor.applyQueryFlow(query, pagination);
   }
 
   getById(id) {
