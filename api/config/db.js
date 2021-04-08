@@ -9,7 +9,18 @@ class DB {
   constructor() {
     this.knex = knex({
       client: 'pg',
-      connection: config.DATABASE_CONN_DETAILS
+      connection: config.DATABASE_CONN_DETAILS,
+      debug: process.env.NODE_ENV === 'development',
+      asyncStackTraces: true,
+      pool: {
+        min: 1,
+        max: 20,
+        afterCreate: function (conn, done) {
+          conn.query('SET timezone="UTC";', function (err) {
+            done(err, conn);
+          });
+        }
+      }
     });
   }
 
