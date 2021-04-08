@@ -3,24 +3,20 @@ services:
   api:
     depends_on:
       - postgres
-      - redis
+      # - redis
     build:
       # target: development
       context: ./api
       dockerfile: ./docker/Dockerfile
+    expose:
+      - 3000
     ports:
       - 3000:3000
     container_name: api
     volumes:
-      - api_node_modules:/home/node/node_modules
-      - type: bind
-        source: ./api
-        target: /home/node/app
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      - ./api:/usr/src/app/
+      - api_node_modules:/usr/src/app/node_modules
+    env_file: ./api/.env
   postgres:
     image: postgres:13.2
     restart: always
@@ -34,25 +30,27 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
-  redis:
-    image: redis:alpine
-    expose:
-      - 6379
-    ports:
-      - 6379:6379
+  # redis:
+  #   image: redis:alpine
+  #   expose:
+  #     - 6379
+  #   ports:
+  #     - 6379:6379
   ui:
     build: 
       # target: development
       context: ./ui
       dockerfile: ./docker/Dockerfile
     container_name: ui
+    env_file: ./ui/.env
+    expose:
+      - 8080
     ports:
       - 8080:8080
     volumes:
-      - ui_node_modules:/usr/src/app/ui/node_modules/
-      - type: bind
-        source: ./ui
-        target: /usr/src/app/ui
+      - ./ui/src:/usr/src/app/src
+      - ./ui/public:/usr/src/app/public
+      - ui_node_modules:/usr/src/app/node_modules
 volumes:
   api_node_modules:
   ui_node_modules:
