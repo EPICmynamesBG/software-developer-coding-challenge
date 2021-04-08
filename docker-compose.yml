@@ -1,0 +1,59 @@
+version: "3.4"
+services:
+  api:
+    depends_on:
+      - postgres
+      - redis
+    build:
+      # target: development
+      context: ./api
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 3000:3000
+    container_name: api
+    volumes:
+      - api_node_modules:/home/node/node_modules
+      - type: bind
+        source: ./api
+        target: /home/node/app
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+  postgres:
+    image: postgres:13.2
+    restart: always
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+  redis:
+    image: redis:alpine
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+  ui:
+    build: 
+      # target: development
+      context: ./ui
+      dockerfile: ./docker/Dockerfile
+    container_name: ui
+    ports:
+      - 8080:8080
+    volumes:
+      - ui_node_modules:/usr/src/app/ui/node_modules/
+      - type: bind
+        source: ./ui
+        target: /usr/src/app/ui
+volumes:
+  api_node_modules:
+  ui_node_modules:
+  pg_data:
