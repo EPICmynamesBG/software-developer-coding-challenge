@@ -17,7 +17,7 @@ import Logout from './nav/authenticated/Logout';
 import Dashboard from './nav/authenticated/primary/Dashboard';
 import MarketListings from './nav/authenticated/primary/MarketListings';
 import MyListings from './nav/authenticated/primary/MyListings';
-
+import ListingDetails from './nav/authenticated/primary/ListingDetails';
 
 function App() {
   return (
@@ -37,11 +37,17 @@ function App() {
           <AuthenticatedRoute path="/logout">
             <Logout />
           </AuthenticatedRoute>
-          <Route path="/market">
+          <Route exact path="/market">
             <MarketListings />
           </Route>
-          <AuthenticatedRoute path="/my-listings">
+          <Route path="/market/:listingId">
+            <ListingDetails />
+          </Route>
+          <AuthenticatedRoute exact path="/my-listings">
             <MyListings />
+          </AuthenticatedRoute>
+          <AuthenticatedRoute path="/my-listings/:listingId">
+            <ListingDetails />
           </AuthenticatedRoute>
           <AuthenticatedRoute path="/">
             <Dashboard />
