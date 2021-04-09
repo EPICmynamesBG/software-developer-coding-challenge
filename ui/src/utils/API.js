@@ -50,10 +50,11 @@ export function fetchMarketListings(page = 0, pageSize = PAGE_SIZE, sort = '+id'
   });
 }
 
-export function fetchAccountListings(token, accountId, page = 0, sort = '-createdAt') {
+export function fetchAccountListings(token, accountId,page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/${accountId}/listings`;
   return authenticatedApiRequest(token, url, "GET", {
-    pageSize: PAGE_SIZE,
+    filters: filters,
+    pageSize: pageSize,
     page: page,
     sort: [sort]
   });

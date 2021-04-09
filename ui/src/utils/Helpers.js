@@ -1,5 +1,8 @@
 import * as validator from "validator";
 
+import { useHistory } from 'react-router-dom';
+
+
 class HttpError extends Error {
   constructor(message, statusCode = 500, response) {
     super(message);
@@ -82,5 +85,13 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
  * @return {Promise}
  */
 export const authenticatedApiRequest = async (token, url, method, queryParams, bodyParams, headers = {}) => {
-  return apiRequest(url, method, bodyParams, queryParams, { Authorization: `Bearer ${token}`, ...headers });
+  try {
+    return await apiRequest(url, method, bodyParams, queryParams, { Authorization: `Bearer ${token}`, ...headers });
+  } catch (e) {
+    if (e.statusCode === 403) {
+      window.localStorage.setItem("UserAuth", undefined);
+      return;
+    }
+    throw e;
+  }
 }
