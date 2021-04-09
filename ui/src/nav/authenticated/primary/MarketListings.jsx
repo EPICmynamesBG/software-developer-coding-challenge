@@ -8,10 +8,10 @@ import AppNavWrapper from '../../../hoc/AppNavWrapper';
 import EnhancedTable from '../../../components/EnhancedTable';
 
 const columns = [
-  { id: 'id', hidden: true, label: 'ID' },
   { id: 'display.title', label: 'Name' },
   { id: 'vehicleVin', label: 'VIN' },
-  { id: 'vehicleNhtsaData.modelYear', numeric: true, label: 'Model Year' }
+  { id: 'vehicleNhtsaInfo.modelYear', numeric: true, label: 'Model Year' },
+  { field: 'createdAt', label: 'Created' }
 ];
 
 const useLoadListings = (authContext, page, pageSize, sort, filters) => {
@@ -19,22 +19,24 @@ const useLoadListings = (authContext, page, pageSize, sort, filters) => {
 }
 
 function MarketListings({ listings }) {
-  const { list, isLoading, page, pageSize, sort, changeSort, fetchData, setPage, setPageSize } = listings;
+  const { list, isLoading, page, pageSize, sort, error, changeSort, fetchData, setPage, setPageSize } = listings;
+
 
   const handleSortChange = async (field, direction) => {
     changeSort(field, direction);
-    await fetchData();
   }
 
   const handlePageChange = async (pageNum) => {
     setPage(pageNum);
-    await fetchData();
   }
 
   const handlePageSizeChange = async (size) => {
     setPageSize(size);
-    await fetchData();
   }
+  
+  const handleRowClick = (e, name) => {
+    console.log('row click', e, name);
+  };
 
   return (
     <div>
@@ -49,6 +51,8 @@ function MarketListings({ listings }) {
         handlePageChange={handlePageChange}
         handlePageSizeChange={handlePageSizeChange}
         fillHeight={false}
+        handleRowClick={handleRowClick}
+        isLoading={isLoading}
       />
     </div>
   )

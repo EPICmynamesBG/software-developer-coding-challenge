@@ -1,7 +1,5 @@
 import * as validator from "validator";
 
-import { useHistory } from 'react-router-dom';
-
 
 class HttpError extends Error {
   constructor(message, statusCode = 500, response) {
@@ -56,15 +54,16 @@ export const getStoredUserAuth = () => {
  * @param {object} [headers = {}]
  */
 export const apiRequest = async (url, method, bodyParams, queryParams, headers = {}) => {
-  const response = await fetch(url, {
+  const urlObject = new URL(url);
+  urlObject.search = new URLSearchParams(queryParams).toString();
+  const response = await fetch(urlObject, {
     method,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       ...headers
     },
-    body: bodyParams ? JSON.stringify(bodyParams) : undefined,
-    qs: queryParams
+    body: bodyParams ? JSON.stringify(bodyParams) : undefined
   });
 
   const res = await response;

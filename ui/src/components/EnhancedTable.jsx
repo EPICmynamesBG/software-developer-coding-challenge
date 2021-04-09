@@ -30,7 +30,7 @@ const noop = () => {};
 // ];
 
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells = [], title } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells = [], title, enableCheckboxes } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
@@ -38,14 +38,14 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        {enableCheckboxes && <TableCell padding={'checkbox'}>
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all desserts' }}
           />
-        </TableCell>
+        </TableCell>}
         {headCells.map(headCell => (
           headCell.hidden ? null : <TableCell
             key={headCell.id}
@@ -80,6 +80,7 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
+  enableCheckboxes: PropTypes.bool
 };
 
 const useToolbarStyles = makeStyles(theme => ({
@@ -168,7 +169,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true } = props;
+  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true, enableCheckboxes = false, handleRowClick = noop } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(headCells[0].id);
@@ -191,23 +192,27 @@ export default function EnhancedTable(props) {
   };
 
   const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+    if (enableCheckboxes) {
+      const selectedIndex = selected.indexOf(name);
+      let newSelected = [];
+  
+      if (selectedIndex === -1) {
+        newSelected = newSelected.concat(selected, name);
+      } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(selected.slice(1));
+      } else if (selectedIndex === selected.length - 1) {
+        newSelected = newSelected.concat(selected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+          selected.slice(0, selectedIndex),
+          selected.slice(selectedIndex + 1),
+        );
+      }
+  
+      setSelected(newSelected);  
+    } else {
+      handleRowClick(event, name);
     }
-
-    setSelected(newSelected);
   };
 
   const wrapHandlePageChange = (event, page) => {
@@ -253,18 +258,18 @@ export default function EnhancedTable(props) {
                     <TableRow
                       hover
                       onClick={event => handleClick(event, row)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
+                      role={enableCheckboxes ? "checkbox" : "button"}
+                      aria-checked={enableCheckboxes && isItemSelected}
                       tabIndex={-1}
                       key={row.id}
-                      selected={isItemSelected}
+                      selected={enableCheckboxes && isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      {enableCheckboxes && <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
-                      </TableCell>
+                      </TableCell>}
                       {headCells.map(({ id }, index) => {
                         if (index === 0) {
                           return (

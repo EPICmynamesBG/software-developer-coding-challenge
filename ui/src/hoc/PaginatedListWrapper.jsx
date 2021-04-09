@@ -23,6 +23,7 @@ function PaginatedListWrapper(Component, fetchFn, {
     const [filters, setFilters] = useState(defaultFilters);
     const [pageSize, setPageSize] = useState(50);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
     const loadedContext = useContext(authContext);
 
     const fetchPage = async () => {
@@ -34,15 +35,21 @@ function PaginatedListWrapper(Component, fetchFn, {
         [loadedContext, page, pageSize, sortStr, filters] :
         [page, pageSize, sortStr, filters];
       try {
+        console.log('fetching', sortStr);
         setIsLoading(true);
         const data = await fetchFn(...fetchArgs);
         setList(data);
       } catch (e) {
         console.error(e);
+        setError(e);
       }
       setIsLoading(false);
     };
-    
+
+    useEffect(() => {
+      fetchPage();
+    }, [pageSize, filters, sortDir, sortField, page]);
+
 
     const reset = () => {
       setSortField(defaultSort);
@@ -66,6 +73,7 @@ function PaginatedListWrapper(Component, fetchFn, {
         setList([]);
         setPage(0);
       }
+      console.log('changed sort', field, direction);
     };
 
     const changePage = (goToPage = 0) => {
@@ -108,6 +116,7 @@ function PaginatedListWrapper(Component, fetchFn, {
         page,
         pageSize,
         filters,
+        error,
         fetchData: fetchPage,
         resetList: reset,
         isLoading,
