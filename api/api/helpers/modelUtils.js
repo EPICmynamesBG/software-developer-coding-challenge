@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const moment = require('moment');
-const { ValidationError } = require('objection');
+const { ValidationError, raw } = require('objection');
 const { UUID } = require('./constants');
 const { HttpError } = require('./utils');
 
@@ -164,8 +164,14 @@ function datesToString(collection) {
 function applySort(query, sort) {
   const isAscending = sort.charAt(0) === '+';
   const sortDir = isAscending ? 'ASC' : 'DESC';
-  const column = _.snakeCase(sort.slice(1));
-  return query.orderBy(column, sortDir);
+  const column = sort.slice(1).split('.').map(_.snakeCase)
+    .map((val, idx) => {
+      if (idx === 0) return `"${val}"`;
+      return `'${val}'`;
+    })
+    .join('->');
+  console.log('column', column);
+  return query.orderBy(raw(column), sortDir);
 }
 
 const EQ_MAP = {
