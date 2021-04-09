@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -18,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import ErrorMessage from '../components/ErrorMessage';
 
 const noop = () => {};
 
@@ -30,7 +32,7 @@ const noop = () => {};
 // ];
 
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells = [], title, enableCheckboxes } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells = [], title, enableCheckboxes, isLoading = false } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
@@ -57,6 +59,7 @@ function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={order}
               onClick={createSortHandler(headCell.id)}
+              disabled={isLoading}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -80,7 +83,8 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
-  enableCheckboxes: PropTypes.bool
+  enableCheckboxes: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 const useToolbarStyles = makeStyles(theme => ({
@@ -169,7 +173,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true, enableCheckboxes = false, handleRowClick = noop } = props;
+  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true, enableCheckboxes = false, handleRowClick = noop, error, isLoading = false } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(headCells[0].id);
@@ -230,6 +234,7 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        {error && <ErrorMessage errorMessage={error.message} />}
         <EnhancedTableToolbar numSelected={selected.length} title={title} />
         <TableContainer>
           <Table
@@ -245,10 +250,16 @@ export default function EnhancedTable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
+              isLoading={isLoading}
               rowCount={rows.length}
               headCells={headCells}
             />
             <TableBody>
+              {isLoading && <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={headCells.length} style={{ textAlign: 'center' }}>
+                    <CircularProgress /> 
+                  </TableCell>
+                </TableRow>}
               {rows
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
