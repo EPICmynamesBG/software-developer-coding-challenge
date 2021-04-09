@@ -46,23 +46,30 @@ export function ForgotPassword(email) {
 }
 
 export function fetchMarketListings(page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
-  const url = `${process.env.REACT_APP_API_URI}/listings`;
-  return apiRequest(url, "GET", undefined, {
-    filters: filters,
+  const queryParams = {
     pageSize: pageSize,
     page: page,
     sort: [sort]
-  });
+  };
+  if (filters.length) {
+    queryParams.filters = filters;
+  }
+  const url = `${process.env.REACT_APP_API_URI}/listings`;
+  return apiRequest(url, "GET", undefined, queryParams);
 }
 
 export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
-  const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings`;
-  return authenticatedApiRequest(authContext, url, "GET", {
-    filters: filters,
+  const queryParams = {
     pageSize: pageSize,
     page: page,
-    sort: [sort]
-  });
+    sort: [sort],
+    include: ['photos']
+  };
+  if (filters.length) {
+    queryParams.filters = filters;
+  }
+  const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings`;
+  return authenticatedApiRequest(authContext, url, "GET", queryParams);
 }
 
 export function fetchListingDetails(authContext, listingId) {

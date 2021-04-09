@@ -117,6 +117,7 @@ class AccountListing extends BaseModel {
   static get relationMappings() {
     const Account = require('./Account');
     const CustomField = require('./CustomField');
+    const File = require('./File');
 
     return {
       account: {
@@ -137,6 +138,14 @@ class AccountListing extends BaseModel {
             to: 'account_vehicles_custom_fields.custom_field_id'
           },
           to: `${CustomField.tableName}.id`
+        }
+      },
+      photos: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: File,
+        join: {
+          from: `${this.tableName}.id`,
+          to: `${File.tableName}.account_listing_id`
         }
       }
     };

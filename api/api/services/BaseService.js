@@ -29,25 +29,34 @@ class BaseService {
   }
 
 
-  static applyFilters(query, pagination) {
-    if (!pagination) {
+  static applyFilters(query, filters) {
+    if (!filters) {
       return query;
     }
     return query
-      .filters(pagination.filters);
+      .filters(filters);
   }
 
-  constructor(modelClass) {
-    this.modelClass = modelClass;
+  static applyInclusion(query, includes) {
+    if (!includes) {
+      return query;
+    }
+    console.log(includes);
+    return includes.reduce((qry, inclusion) => query.withGraphFetched(inclusion), query);
   }
 
-  static applyQueryFlow(query, pagination) {
+  static applyQueryFlow(query, pagination, additionalParams = {}) {
     const applyMethods = _.flow(
-      qry => this.applyFilters(qry, pagination),
+      qry => this.applyFilters(qry, additionalParams.filters),
+      qry => this.applyInclusion(qry, additionalParams.include),
       qry => this.applySort(qry, pagination),
       qry => this.applyPagination(qry, pagination)
     );
     return applyMethods(query);
+  }
+
+  constructor(modelClass) {
+    this.modelClass = modelClass;
   }
 
   create(collection) {
@@ -56,30 +65,36 @@ class BaseService {
       .returning('*');
   }
 
-  getAll(pagination) {
+  getAll(pagination, additionalParams = {}) {
     const query = this.modelClass.query()
       .select('*');
-    return this.constructor.applyQueryFlow(query, pagination);
+    return this.constructor.applyQueryFlow(query, pagination, additionalParams);
   }
 
-  find(params, pagination) {
+  find(params, pagination, additionalParams = {}) {
     const query = this.modelClass.query()
       .select('*')
       .where(params);
 
-    return this.constructor.applyQueryFlow(query, pagination);
+    return this.constructor.applyQueryFlow(query, pagination, additionalParams);
   }
 
-  getById(id) {
-    return this.modelClass.query()
-      .findOne({ id });
+  getById(id, additionalParams = {}) {
+    return this.constructor.applyInclusion(
+      this.modelClass.query()
+        .findOne({ id }),
+      additionalParams
+    );
   }
 
-  findOne(params) {
-    return this.modelClass.query()
-      .select('*')
-      .first()
-      .where(params);
+  findOne(params, additionalParams = {}) {
+    return this.constructor.applyInclusion(
+      this.modelClass.query()
+        .select('*')
+        .first()
+        .where(params),
+      additionalParams
+    );
   }
 
   update(params, updateObject) {

@@ -49,6 +49,10 @@ class BaseController {
     return [];
   }
 
+  static get paginationParams() {
+    return ['sort', 'limit', 'page'];
+  }
+
   async responder(action, response, asyncFn) {
     try {
       const results = await asyncFn();
@@ -82,30 +86,30 @@ class BaseController {
   }
 
   getAll(req, res) {
-    let queryParams;
-    if (this.pagination) {
-      queryParams = this.constructor.Helper.getQueryParams(req);
-    }
-    return this.responder('select', res, () => this.service.getAll(queryParams));
+    const queryParams = this.constructor.Helper.getQueryParams(req);
+    const paginationParams = _.pick(queryParams, this.constructor.paginationParams);
+    const otherParams = _.omit(queryParams, this.constructor.paginationParams);
+    return this.responder('select', res, () => this.service.getAll(paginationParams, otherParams));
   }
 
   getAllByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
-    let queryParams;
-    if (this.pagination) {
-      queryParams = this.constructor.Helper.getQueryParams(req);
-    }
-    return this.responder('select', res, () => this.service.find(pathIds, queryParams));
+    const queryParams = this.constructor.Helper.getQueryParams(req);
+    const paginationParams = _.pick(queryParams, this.constructor.paginationParams);
+    const otherParams = _.omit(queryParams, this.constructor.paginationParams);
+    return this.responder('select', res, () => this.service.find(pathIds, paginationParams, otherParams));
   }
 
   getById(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
-    return this.responder('select', res, () => this.service.getById(id));
+    const queryParams = this.constructor.Helper.getQueryParams(req);
+    return this.responder('select', res, () => this.service.getById(id, queryParams));
   }
 
   getByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
-    return this.responder('select', res, () => this.service.findOne(pathIds));
+    const queryParams = this.constructor.Helper.getQueryParams(req);
+    return this.responder('select', res, () => this.service.findOne(pathIds, queryParams));
   }
 
   updateById(req, res) {
@@ -196,6 +200,8 @@ class BaseController {
       $ref: '#/parameters/sort'
     }, {
       $ref: '#/parameters/filters'
+    }, {
+      $ref: '#/parameters/include'
     }];
 
     const routes = {
