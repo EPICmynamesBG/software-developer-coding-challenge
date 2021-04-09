@@ -9,15 +9,30 @@ const useAuthHandler = (initialState) => {
   const timeout = React.useRef();
 
   let setAuthStatus;
+  const setUnauthStatus = () => {
+    window.localStorage.clear();
+    setAuth(null);
+  };
+
   const refresh = async () => {
-    const { token } = await API.Refresh(auth);
-    setAuthStatus({
-      ...auth,
-      token
-    });
+    console.log('refreshing');
+    try {
+      const { token } = await API.Refresh({ auth: auth });
+      setAuthStatus({
+        ...auth,
+        token
+      });
+    } catch (e) {
+      console.error(e);
+      setUnauthStatus();
+    }
   };
 
   const setAutoRefresh = (inMinutes = 5) => {
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+      timeout.current = null;
+    }
     timeout.current = setTimeout(() => {
       refresh();
     }, inMinutes * 60 * 1000);
@@ -26,13 +41,18 @@ const useAuthHandler = (initialState) => {
   setAuthStatus = (userAuth) => {
     window.localStorage.setItem("UserAuth", JSON.stringify(userAuth));
     setAuth(userAuth);
-    setAutoRefresh(1);
   };
 
-  const setUnauthStatus = () => {
-    window.localStorage.clear();
-    setAuth(null);
-  };
+  React.useEffect(() => {
+    if (auth) {
+      setAutoRefresh();
+    } else {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+        timeout.current = null;
+      }
+    }
+  }, [auth]);
 
   return {
     auth,
