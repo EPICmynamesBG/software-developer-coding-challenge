@@ -1,22 +1,23 @@
 import * as React from 'react';
 
 import { useParams, useHistory } from "react-router-dom";
-import { authContext } from './../../../contexts/AuthContext';
-import * as API from '../../../utils/API';
-import AppNavWrapper from '../../../hoc/AppNavWrapper';
+import AppNavWrapper from '../../../../hoc/AppNavWrapper';
+
+import { authContext } from './../../../../contexts/AuthContext';
+import * as API from '../../../../utils/API';
+
 
 /** Presentation */
-import ErrorMessage  from "../../../components/ErrorMessage";
+import ErrorMessage from "../../../../components/ErrorMessage";
 
 /** Custom Hooks */
-import useErrorHandler from "../../../utils/custom-hooks/ErrorHandler";
+import useErrorHandler from "../../../../utils/custom-hooks/ErrorHandler";
 
-import ViewListingDetails from './listingDetails/ViewListingDetails';
 import { CircularProgress } from '@material-ui/core';
 
 const { useEffect, useState, useContext, Fragment } = React;
 
-function ListingDetails() {
+function EditListingDetails() {
   const [listing, setListing] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { error, showError } = useErrorHandler(null);
@@ -41,11 +42,11 @@ function ListingDetails() {
     <Fragment>
       {error && <ErrorMessage errorMessage={error} />}
       {isLoading && <CircularProgress />}
-      {listing && <ViewListingDetails listing={listing} />}
+      Loaded!
     </Fragment>
   );
 }
 
 export default (
-  AppNavWrapper({ title: 'Listing' })(ListingDetails)
+  AppNavWrapper({ title: 'Edit Listing' })(EditListingDetails)
 );

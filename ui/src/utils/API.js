@@ -50,8 +50,8 @@ export function fetchMarketListings(page = 0, pageSize = PAGE_SIZE, sort = '+id'
   });
 }
 
-export function fetchAccountListings(authContext, accountId,page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
-  const url = `${process.env.REACT_APP_API_URI}/accounts/${accountId}/listings`;
+export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
+  const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings`;
   return authenticatedApiRequest(authContext, url, "GET", {
     filters: filters,
     pageSize: pageSize,
@@ -59,3 +59,14 @@ export function fetchAccountListings(authContext, accountId,page = 0, pageSize =
     sort: [sort]
   });
 }
+
+export function fetchListingDetails(authContext, listingId) {
+  const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}`;
+  return authenticatedApiRequest(authContext, url, "GET");
+}
+
+export function fetchMyListingDetails(authContext, listingId) {
+  const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings/${listingId}`;
+  return authenticatedApiRequest(authContext, url, "GET");
+}
+

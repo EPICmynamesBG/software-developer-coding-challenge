@@ -18,6 +18,7 @@ import Dashboard from './nav/authenticated/primary/Dashboard';
 import MarketListings from './nav/authenticated/primary/MarketListings';
 import MyListings from './nav/authenticated/primary/MyListings';
 import ListingDetails from './nav/authenticated/primary/ListingDetails';
+import EditListingDetails from './nav/authenticated/primary/listingDetails/EditListingDetails';
 
 function App() {
   return (
@@ -40,14 +41,17 @@ function App() {
           <Route exact path="/market">
             <MarketListings />
           </Route>
-          <Route path="/market/:listingId">
+          <Route exact path="/market/:listingId">
             <ListingDetails />
           </Route>
           <AuthenticatedRoute exact path="/my-listings">
             <MyListings />
           </AuthenticatedRoute>
-          <AuthenticatedRoute path="/my-listings/:listingId">
+          <AuthenticatedRoute exact path="/my-listings/:listingId">
             <ListingDetails />
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/my-listings/:listingId/edit">
+            <EditListingDetails />
           </AuthenticatedRoute>
           <AuthenticatedRoute path="/">
             <Dashboard />
