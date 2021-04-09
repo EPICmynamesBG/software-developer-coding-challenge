@@ -11,9 +11,9 @@ export function Login(email, password) {
   });
 }
 
-export function Me(token) {
+export function Me(authContext) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/me`;
-  return authenticatedApiRequest(token, url, "GET");
+  return authenticatedApiRequest(authContext, url, "GET");
 }
 
 /**
@@ -50,9 +50,9 @@ export function fetchMarketListings(page = 0, pageSize = PAGE_SIZE, sort = '+id'
   });
 }
 
-export function fetchAccountListings(token, accountId,page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
+export function fetchAccountListings(authContext, accountId,page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/${accountId}/listings`;
-  return authenticatedApiRequest(token, url, "GET", {
+  return authenticatedApiRequest(authContext, url, "GET", {
     filters: filters,
     pageSize: pageSize,
     page: page,

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useHistory } from 'react-router-dom';
 
 /** Utils */
 import * as API from '../../../utils/API';
@@ -14,29 +15,27 @@ const columns = [
 ];
 
 
-const useLoadListings = (authContext, page, pageSize, sort, filters) => {
-  const { auth } = authContext;
-  console.log(auth);
-  return API.fetchAccountListings(auth.token, auth.id, page, pageSize, sort, filters);
-}
+const useLoadListings = (authContext, page, pageSize, sort, filters) => API.fetchAccountListings(authContext, page, pageSize, sort, filters);
 
 function MyListings({ listings }) {
-  const { list, isLoading, page, pageSize, sort, changeSort, fetchData, setPage, setPageSize } = listings;
+  const { list, isLoading, page, pageSize, sort, changeSort, setPage, setPageSize, error } = listings;
+  const history = useHistory();
 
   const handleSortChange = async (field, direction) => {
     changeSort(field, direction);
-    await fetchData();
   }
 
   const handlePageChange = async (pageNum) => {
     setPage(pageNum);
-    await fetchData();
   }
 
   const handlePageSizeChange = async (size) => {
     setPageSize(size);
-    await fetchData();
   }
+
+  const handleRowClick = (e, row) => {
+    history.push(`/my-listings/${row.id}`);
+  };
 
   return (
     <div>
@@ -51,6 +50,8 @@ function MyListings({ listings }) {
         handlePageChange={handlePageChange}
         handlePageSizeChange={handlePageSizeChange}
         fillHeight={false}
+        error={error}
+        handleRowClick={handleRowClick}
       />
     </div>
   );
@@ -60,7 +61,7 @@ export default (
   AppNavWrapper({ title: 'My Listings' })(
     PaginatedListWrapper(MyListings, useLoadListings, {
       propertyName: 'listings',
-      defaultSort: '+createdAt'
+      defaultSort: 'createdAt'
     })
   )
 );

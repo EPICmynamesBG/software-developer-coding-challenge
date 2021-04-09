@@ -71,7 +71,7 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
     return response.json();
   }
   const body = response.json();
-  throw new HttpError(body.message, response.statusCode, response);
+  throw new HttpError(body.message, response.status, response);
 };
 
 /**
@@ -83,12 +83,14 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
  * @param  {Object}  [headers={}]
  * @return {Promise}
  */
-export const authenticatedApiRequest = async (token, url, method, queryParams, bodyParams, headers = {}) => {
+export const authenticatedApiRequest = async (authContext, url, method, queryParams, bodyParams, headers = {}) => {
+  const { auth, setUnauthStatus } = authContext;
   try {
+    const { token } = auth;
     return await apiRequest(url, method, bodyParams, queryParams, { Authorization: `Bearer ${token}`, ...headers });
   } catch (e) {
     if (e.statusCode === 403) {
-      window.localStorage.setItem("UserAuth", undefined);
+      setUnauthStatus();
       return;
     }
     throw e;

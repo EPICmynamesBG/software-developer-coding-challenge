@@ -32,7 +32,10 @@ function Login() {
     try {
       setLoading(true);
       const tokenData = await API.Login(userEmail, userPassword);
-      const userInfo = await API.Me(tokenData.token);
+      const userInfo = await API.Me({
+        ...auth,
+        auth: tokenData
+      });
       auth.setAuthStatus({ ...tokenData, ...userInfo });
     } catch (err) {
       console.error(err);

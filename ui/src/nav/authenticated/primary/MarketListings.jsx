@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useHistory } from 'react-router-dom';
 
 /** Utils */
 import * as API from '../../../utils/API';
@@ -11,7 +12,7 @@ const columns = [
   { id: 'display.title', label: 'Name' },
   { id: 'vehicleVin', label: 'VIN' },
   { id: 'vehicleNhtsaInfo.modelYear', numeric: true, label: 'Model Year' },
-  { field: 'createdAt', label: 'Created' }
+  { id: 'createdAt', label: 'Created' }
 ];
 
 const useLoadListings = (authContext, page, pageSize, sort, filters) => {
@@ -20,7 +21,7 @@ const useLoadListings = (authContext, page, pageSize, sort, filters) => {
 
 function MarketListings({ listings }) {
   const { list, isLoading, page, pageSize, sort, error, changeSort, fetchData, setPage, setPageSize } = listings;
-
+  const history = useHistory();
 
   const handleSortChange = async (field, direction) => {
     changeSort(field, direction);
@@ -34,8 +35,8 @@ function MarketListings({ listings }) {
     setPageSize(size);
   }
   
-  const handleRowClick = (e, name) => {
-    console.log('row click', e, name);
+  const handleRowClick = (e, row) => {
+    history.push(`/market/${row.id}`);
   };
 
   return (
