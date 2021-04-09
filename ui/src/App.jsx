@@ -37,9 +37,9 @@ function App() {
           <AuthenticatedRoute path="/logout">
             <Logout />
           </AuthenticatedRoute>
-          <AuthenticatedRoute path="/market">
+          <Route path="/market">
             <MarketListings />
-          </AuthenticatedRoute>
+          </Route>
           <AuthenticatedRoute path="/my-listings">
             <MyListings />
           </AuthenticatedRoute>

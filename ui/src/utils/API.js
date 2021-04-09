@@ -40,13 +40,11 @@ export function ForgotPassword(email) {
   });
 }
 
-export function fetchMarketListings(token, page = 0, sort = '+id') {
+export function fetchMarketListings(page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
   const url = `${process.env.REACT_APP_API_URI}/listings`;
-  return authenticatedApiRequest(token, url, "GET", {
-    filter: {
-      active: true
-    },
-    pageSize: PAGE_SIZE,
+  return apiRequest(url, "GET", undefined, {
+    filters: filters,
+    pageSize: pageSize,
     page: page,
     sort: [sort]
   });

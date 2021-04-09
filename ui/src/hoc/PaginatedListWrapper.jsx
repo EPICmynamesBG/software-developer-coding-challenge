@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 
 import { authContext } from "../contexts/AuthContext";
 
@@ -12,13 +12,16 @@ function PaginatedListWrapper(Component, fetchFn, {
   loadOnMount = true,
   requiresAuthentication = true,
   propertyName = 'data',
-  defaultSort = 'id'
+  defaultSort = 'id',
+  defaultFilters = []
 }) {
   return function PaginatedComponent(props) {
     const [list, setList] = useState([]);
     const [page, setPage] = useState(0);
     const [sortField, setSortField] = useState(defaultSort);
     const [sortDir, setSortDir] = useState('asc');
+    const [filters, setFilters] = useState(defaultFilters);
+    const [pageSize, setPageSize] = useState(50);
     const [isLoading, setIsLoading] = useState(false);
     const loadedContext = useContext(authContext);
 
@@ -28,25 +31,25 @@ function PaginatedListWrapper(Component, fetchFn, {
       }
       const sortStr = buildSortString(sortField, sortDir);
       const fetchArgs = requiresAuthentication ?
-        [loadedContext, page, sortStr] :
-        [page, sortStr];
+        [loadedContext, page, pageSize, sortStr, filters] :
+        [page, pageSize, sortStr, filters];
       try {
         setIsLoading(true);
         const data = await fetchFn(...fetchArgs);
-        console.log(data);
-        setList([...list, ...data]);
-        setPage(page + 1);
+        setList(data);
       } catch (e) {
         console.error(e);
       }
       setIsLoading(false);
     };
+    
 
     const reset = () => {
       setSortField(defaultSort);
       setSortDir('asc');
       setList([]);
       setPage(0);
+      setFilters(defaultFilters);
     };
 
     const changeSort = (field, direction) => {
@@ -65,10 +68,35 @@ function PaginatedListWrapper(Component, fetchFn, {
       }
     };
 
+    const changePage = (goToPage = 0) => {
+      setPage(goToPage);
+      setList([]);
+    };
 
-    useEffect(async () => {
+    const changePageSize = (newSize) => {
+      setPageSize(newSize);
+      setList([]);
+    };
+
+    const addFilter = (filterString) => {
+      setFilters([...filters, filterString]);
+    };
+
+    const removeFilter = (filterString) => {
+      const idx = filters.indexOf(filterString);
+      if (idx === -1) {
+        console.warn('Attempted to remove unset filter');
+        return null;
+      }
+      setFilters([
+        ...filters.slice(0, idx),
+        ...filters.slice(idx + 1)
+      ]);
+    };
+
+    useEffect(() => {
       if (loadOnMount) {
-        fetchPage();
+        fetchPage(true);
       }
       return reset;
     }, []);
@@ -78,11 +106,16 @@ function PaginatedListWrapper(Component, fetchFn, {
         sort: buildSortString(sortField, sortDir),
         list,
         page,
+        pageSize,
+        filters,
         fetchData: fetchPage,
         resetList: reset,
         isLoading,
         changeSort,
-        setPage
+        setPage: changePage,
+        setPageSize: changePageSize,
+        addFilter,
+        removeFilter
       }
     };
 

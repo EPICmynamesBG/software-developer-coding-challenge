@@ -168,7 +168,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { rows = [], page = 0, rowsPerPage = 25, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop } = props;
+  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(headCells[0].id);
@@ -210,9 +210,17 @@ export default function EnhancedTable(props) {
     setSelected(newSelected);
   };
 
+  const wrapHandlePageChange = (event, page) => {
+    handlePageChange(page);
+  };
+
+  const wrapHandlePageSizeChange = (event) => {
+    handlePageSizeChange(event.target.value);
+  };
+
   const isSelected = id => selected.indexOf(id) !== -1;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = fillHeight ? rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage) : 0;
 
   return (
     <div className={classes.root}>
@@ -260,12 +268,12 @@ export default function EnhancedTable(props) {
                       {headCells.map(({ id }, index) => {
                         if (index === 0) {
                           return (
-                            <TableCell component="th" id={labelId} scope="row" padding="none">
+                            <TableCell key={id} component="th" id={labelId} scope="row" padding="none">
                               {row[id]}
                             </TableCell>
                           );
                         }
-                        return <TableCell align="right">{row[id]}</TableCell>;
+                        return <TableCell key={index} align="right">{row[id]}</TableCell>;
                       })}
                     </TableRow>
                   );
@@ -279,13 +287,13 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
-          count={rows.length}
+          count={-1}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handlePageChange}
-          onChangeRowsPerPage={() => {}}
+          onChangePage={wrapHandlePageChange}
+          onChangeRowsPerPage={wrapHandlePageSizeChange}
         />
       </Paper>
     </div>
