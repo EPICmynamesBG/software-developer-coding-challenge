@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import { authContext } from '../contexts/AuthContext';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { version } from "../../package.json";
@@ -45,6 +47,7 @@ const useStyles = makeStyles(theme => ({
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
+    alignItems: 'space-between'
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -60,12 +63,16 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  title: {
+    flexGrow: 1
+  }
 }));
 
 function NavBar({ pageTitle, pageClass, children }) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { auth } = React.useContext(authContext);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -114,9 +121,18 @@ function NavBar({ pageTitle, pageClass, children }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap>
             {pageTitle}
           </Typography>
+          {auth ?
+            <div className="account">
+              {auth.email}
+            </div>
+            :
+            <Link to="login">
+              <Button color="inherit">Login</Button>
+            </Link>
+        }
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="nav">
