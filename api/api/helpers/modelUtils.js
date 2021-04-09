@@ -70,7 +70,7 @@ function iterateSchema(jsonSchema, object, fn = _.noop) {
   const iterate = _.get(jsonSchema, 'properties', _.get(jsonSchema, 'items', {}));
   const required = _.get(jsonSchema, 'required', []);
   _.each(iterate, (schema, prop) => {
-    const value = clone[prop];
+    const value = _.get(clone, prop);
     const { type } = schema;
     if (type === 'object') {
       clone[prop] = iterateSchema(schema, clone[prop], fn);
@@ -79,7 +79,7 @@ function iterateSchema(jsonSchema, object, fn = _.noop) {
     } else {
       const isRequired = required.includes(prop);
       const res = fn(schema, value, isRequired);
-      clone[prop] = res === undefined ? value : res;
+      _.set(clone, prop, res === undefined ? value : res);
     }
   });
   return clone;

@@ -99,6 +99,21 @@ class AccountListing extends BaseModel {
     };
   }
 
+  static get updateSchema() {
+    const schema = { ...super.updateSchema };
+    _.unset(schema, 'properties.account_id');
+    schema.required = _.without(schema.required, 'account_id');
+    return schema;
+  }
+
+  static get createSchema() {
+    const schema = { ...super.createSchema };
+    _.unset(schema, 'properties.account_id');
+    schema.required = _.without(schema.required, 'account_id');
+    return schema;
+  }
+
+
   static get relationMappings() {
     const Account = require('./Account');
     const CustomField = require('./CustomField');

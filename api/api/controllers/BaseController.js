@@ -66,7 +66,6 @@ class BaseController {
         handleResponse(undefined, results, response);
       }
     } catch (e) {
-      console.log('HERE', e);
       handleResponse(e, undefined, response);
     }
     return;
@@ -230,7 +229,7 @@ class BaseController {
               name: 'body',
               in: 'body',
               required: true,
-              schema: { $ref: `#/definitions/${this.Name}` }
+              schema: { $ref: `#/definitions/Create${this.Name}` }
             }
           ],
           responses: {

@@ -37,6 +37,25 @@ const replaceVars = (yaml) => {
   return yaml;
 };
 
+/**
+ * Modifies the incoming schema to remove encrypted fields
+ * @param {object} schema 
+ * @returns the modified schema input
+ */
+function stripEncrypted(schema) {
+  if (schema['x-encrypt']) {
+    // Remove internal/encrypted properties from Swagger definition
+    schema['x-encrypt'] = _.map(schema['x-encrypt'], _.camelCase);
+    _.forEach(schema['x-encrypt'], (property) => {
+      _.unset(schema.properties, property);
+    });
+    schema.required = _.without(schema.required, ...schema['x-encrypt']);
+    // Remove the x-encrypt from Swagger definition
+    _.unset(schema, 'x-encrypt');
+  }
+  return schema;
+}
+
 function APIInjection(api) {
   // Automatically add Authorization for all endpoints with security set
   _.forEach(api.paths, (pathBody) => {
@@ -51,28 +70,17 @@ function APIInjection(api) {
     });
   });
 
+  const camelCaseRequired = (schema) => {
+    schema.required = _.map(schema.required, _.camelCase);
+    return schema;
+  }
+
   // Bind models jsonSchema to definitions
   _.forEach(models, (model, modelName) => {
-    let schema = _.cloneDeep(model.jsonSchema);
-    if (schema['x-encrypt']) {
-      // Remove internal/encrypted properties from Swagger definition
-      schema['x-encrypt'] = _.map(schema['x-encrypt'], _.camelCase);
-      _.forEach(schema['x-encrypt'], (property) => {
-        _.unset(schema.properties, property);
-      });
-      schema.required = _.without(schema.required, ...schema['x-encrypt']);
-      // Remove the x-encrypt from Swagger definition
-      _.unset(schema, 'x-encrypt');
-    }
-    schema = camelCaseKeys(schema);
-    schema.required = _.map(schema.required, _.camelCase);
-    _.set(api, ['definitions', modelName], schema);
-    const { required, ...updateSchema } = schema;
-
-    // Remove id from updateSchema
-    const cloneUpdate = _.cloneDeep(updateSchema);
-    _.unset(cloneUpdate, 'properties.id');
-    _.set(api, ['definitions', `Update${modelName}`], cloneUpdate);
+    const flow = _.flow(_.cloneDeep, stripEncrypted, camelCaseKeys, camelCaseRequired);
+    _.set(api, ['definitions', modelName], flow(model.getSchema));
+    _.set(api, ['definitions', `Create${modelName}`], flow(model.createSchema));
+    _.set(api, ['definitions', `Update${modelName}`], flow(model.updateSchema));
   });
 
   // Bind controllers to definitions

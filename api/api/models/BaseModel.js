@@ -63,6 +63,24 @@ class BaseModel extends Model {
     return [__dirname];
   }
 
+  static get getSchema() {
+    return this.jsonSchema;
+  }
+
+  static get updateSchema() {
+    const update = { ...this.jsonSchema };
+    _.unset(update, 'properties.id');
+    _.unset(update, 'properties.created_at');
+    return update;
+  }
+
+  static get createSchema() {
+    const update = { ...this.jsonSchema };
+    _.unset(update, 'properties.id');
+    _.unset(update, 'properties.created_at');
+    return update;
+  }
+
   static query() {
     const builderInstance = super.query();
     builderInstance.tableName = this.tableName;
