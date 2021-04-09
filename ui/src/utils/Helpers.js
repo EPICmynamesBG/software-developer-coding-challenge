@@ -96,3 +96,26 @@ export const authenticatedApiRequest = async (authContext, url, method, queryPar
     throw e;
   }
 }
+
+function _getTimeZoneOffsetInMs() {
+  return new Date().getTimezoneOffset() * -60 * 1000;
+}
+
+export function timestampToDatetimeLocalInputString(timestamp) {
+  // https://stackoverflow.com/a/62360139
+  const date = new Date((timestamp + _getTimeZoneOffsetInMs()));
+  // slice(0, 19) includes seconds
+  return date.toISOString().slice(0, 19);
+}
+
+export function localeDatetimeToISOString(localTimestamp) {
+  console.log(localTimestamp);
+  // https://stackoverflow.com/a/66558369
+  const fakeUtcTime = new Date(`${localTimestamp}Z`);
+  console.log(fakeUtcTime);
+  const d = new Date(fakeUtcTime.getTime() + fakeUtcTime.getTimezoneOffset() * 60000);
+  console.log(d);
+  return d.toISOString();
+}
+
+

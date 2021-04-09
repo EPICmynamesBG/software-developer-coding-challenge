@@ -11,6 +11,11 @@ export function Login(email, password) {
   });
 }
 
+export function Refresh(authContext) {
+  const url = `${process.env.REACT_APP_API_URI}/accounts/refresh`;
+  return authenticatedApiRequest(authContext, url, "GET");
+}
+
 export function Me(authContext) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/me`;
   return authenticatedApiRequest(authContext, url, "GET");
@@ -70,3 +75,7 @@ export function fetchMyListingDetails(authContext, listingId) {
   return authenticatedApiRequest(authContext, url, "GET");
 }
 
+export function CreateListing(authContext, listingData = {}) {
+  const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings`;
+  return authenticatedApiRequest(authContext, url, "POST", undefined, listingData);
+}

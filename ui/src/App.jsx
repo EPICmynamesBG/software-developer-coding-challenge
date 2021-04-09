@@ -19,6 +19,7 @@ import MarketListings from './nav/authenticated/primary/MarketListings';
 import MyListings from './nav/authenticated/primary/MyListings';
 import ListingDetails from './nav/authenticated/primary/ListingDetails';
 import EditListingDetails from './nav/authenticated/primary/listingDetails/EditListingDetails';
+import CreateListing from './nav/authenticated/primary/listingDetails/CreateListing';
 
 function App() {
   return (
@@ -46,6 +47,9 @@ function App() {
           </Route>
           <AuthenticatedRoute exact path="/my-listings">
             <MyListings />
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/my-listings/create">
+            <CreateListing />
           </AuthenticatedRoute>
           <AuthenticatedRoute exact path="/my-listings/:listingId">
             <ListingDetails />

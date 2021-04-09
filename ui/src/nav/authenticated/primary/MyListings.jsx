@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 /** Utils */
 import * as API from '../../../utils/API';
@@ -7,6 +7,7 @@ import PaginatedListWrapper from '../../../hoc/PaginatedListWrapper';
 import AppNavWrapper from '../../../hoc/AppNavWrapper';
 
 import EnhancedTable from '../../../components/EnhancedTable';
+import { Button } from "@material-ui/core";
 
 const columns = [
   { id: 'id', hidden: true, label: 'ID' },
@@ -39,6 +40,9 @@ function MyListings({ listings }) {
 
   return (
     <div>
+      <Link to="/my-listings/create">
+        <Button>Create</Button>
+      </Link>
       <EnhancedTable
         title="Market"
         rows={list}
