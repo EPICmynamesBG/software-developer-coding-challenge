@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Button, FormControl, Input, InputLabel, FormHelperText, Typography, Link as UILink } from '@material-ui/core';
+import { Button, Typography, Link as UILink, FormGroup, TextField } from '@material-ui/core';
 import { Redirect, Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 
 /** Presentation */
 import ErrorMessage from "../components/ErrorMessage";
@@ -9,8 +10,34 @@ import ErrorMessage from "../components/ErrorMessage";
 import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
 
 /** Utils */
-import Header from '../root/Header';
 import * as API from '../utils/API';
+import AppNavWrapper from "../hoc/AppNavWrapper";
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: 15,
+    '& > *': {
+      margin: theme.spacing(2),
+      width: '50ch'
+    }
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: 15,
+    '& > *': {
+      margin: theme.spacing(2),
+      width: '50ch'
+    }
+  },
+  button: {
+    margin: theme.spacing(2),
+  },
+  link: {
+    margin: 20
+  }
+}));
 
 function CreateAccount() {
   const [accountCreated, setAccountCreated] = React.useState(false);
@@ -20,8 +47,7 @@ function CreateAccount() {
   const [confirmPassword, setConfirmUserPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const { error, showError } = useErrorHandler(null);
-
-  window.document.title = "trdrev";
+  const classes = useStyles();
 
   const createAccount = async () => {
     try {
@@ -49,13 +75,15 @@ function CreateAccount() {
   }
 
   return (
-    <form onSubmit={formSubmit} className="login">
-      <Header>Create Account</Header>
-      <FormControl>
-        <InputLabel htmlFor="email">
-          Email Address
-        </InputLabel>
-        <Input
+    <div className={classes.root}>
+      <div className={classes.container}>
+        <Typography color="inherit" variant="h3" >
+          Create Account
+        </Typography>
+      </div>
+      <form onSubmit={formSubmit} className="login">
+      <FormGroup className={classes.container}>
+        <TextField
           id="email"
           type="email"
           name="email"
@@ -63,14 +91,11 @@ function CreateAccount() {
           placeholder="john@mail.com"
           onChange={e => setUserEmail(e.target.value)}
           aria-describedby="email-desc"
+          helperText="Login using your email"
+          label="Email Address"
+          disabled={loading}
         />
-        <FormHelperText id="email-desc">Login using your email</FormHelperText>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="password">
-          Password
-        </InputLabel>
-        <Input
+        <TextField
           id="password"
           type="password"
           name="password"
@@ -78,14 +103,11 @@ function CreateAccount() {
           placeholder="Password"
           onChange={e => setUserPassword(e.target.value)}
           aria-describedby="password-desc"
+          helperText="Enter a password"
+          label="Password"
+          disabled={loading}
         />
-      <FormHelperText id="password-desc">Enter a password</FormHelperText>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="confirm-password">
-          Password
-        </InputLabel>
-        <Input
+        <TextField
           id="confirm-password"
           type="password"
           name="confirmPassword"
@@ -93,18 +115,20 @@ function CreateAccount() {
           placeholder="Confirm Password"
           onChange={e => setConfirmUserPassword(e.target.value)}
           aria-describedby="confirm-password-desc"
+          helperText="Confirm your password"
+          label="Confirm Password"
+          disabled={loading}
         />
-        <FormHelperText id="confirm-password-desc">Confirm your password</FormHelperText>
-      </FormControl>
-      <Button type="submit" disabled={loading || accountCreated} onClick={formSubmit}>
-        {loading ? "Loading..." : "Create Account"}
-      </Button>
-      <Typography>
-        <UILink component={Link} to="/login">Login</UILink>
-      </Typography>
+      </FormGroup>
+        <FormGroup className={classes.container}>
+          <Button type="submit" className={classes.button} variant="contained" color="primary" disabled={loading || accountCreated} onClick={formSubmit}>
+            {loading ? "Loading..." : "Create Account"}
+          </Button>
+        </FormGroup>
+      </form>
       {error && <ErrorMessage errorMessage={error} />}
-    </form>
+    </div>
   );
 }
 
-export default CreateAccount;
+export default AppNavWrapper({ title: 'Forgot Password' })(CreateAccount);;

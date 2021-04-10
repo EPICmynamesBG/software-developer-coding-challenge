@@ -149,6 +149,8 @@ function CreateListing() {
             onChange={updateFormFieldValue}
             defaultValue={formState.endAtTimestamp}
           />
+        </FormGroup>
+        <FormGroup className={classes.container}>
           <Button disabled={isLoading} className={classes.button} type="submit" variant="contained" color="primary">
             {isLoading ? 'Submitting...' : 'Submit'}
           </Button>

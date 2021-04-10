@@ -1,5 +1,7 @@
 import * as React from "react";
-import { Button, FormControl, Input, InputLabel, FormHelperText, Typography, Link as UILink } from '@material-ui/core';
+import { Button, Typography, Link as UILink, FormGroup, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 import {
   Link,
   Redirect
@@ -16,8 +18,33 @@ import { authContext } from "../contexts/AuthContext";
 
 /** Utils */
 import { validateLoginForm } from "../utils/Helpers";
-import Header from '../root/Header';
 import * as API from '../utils/API';
+import AppNavWrapper from "../hoc/AppNavWrapper";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: 15,
+    '& > *': {
+      margin: theme.spacing(2),
+      width: '50ch'
+    }
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: 15,
+    '& > *': {
+      margin: theme.spacing(2),
+      width: '50ch'
+    }
+  },
+  button: {
+    margin: theme.spacing(2),
+  },
+  link: {
+    margin: 20
+  }
+}));
 
 function Login() {
   const [userEmail, setUserEmail] = React.useState("");
@@ -25,8 +52,7 @@ function Login() {
   const [loading, setLoading] = React.useState(false);
   const auth = React.useContext(authContext);
   const { error, showError } = useErrorHandler(null);
-
-  window.document.title = "trdrev";
+  const classes = useStyles();
 
   const authHandler = async () => {
     try {
@@ -56,48 +82,52 @@ function Login() {
   }
 
   return (
-    <form onSubmit={formSubmit} className="login">
-      <Header>Sign in</Header>
-      <FormControl>
-        <InputLabel htmlFor="email">
-          Email Address
-        </InputLabel>
-        <Input
-          id="email"
-          type="email"
-          name="email"
-          value={userEmail}
-          placeholder="john@mail.com"
-          onChange={e => setUserEmail(e.target.value)}
-          aria-describedby="email-desc"
-        />
-        <FormHelperText id="email-desc">Login using your email</FormHelperText>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="password">
-          Password
-        </InputLabel>
-        <Input
-          id="password"
-          type="password"
-          name="password"
-          value={userPassword}
-          placeholder="Password"
-          onChange={e => setUserPassword(e.target.value)}
-          aria-describedby="password-desc"
-        />
-        <FormHelperText id="password-desc">Enter password to finish the login form</FormHelperText>
-      </FormControl>
-      <Button type="submit" disabled={loading} onClick={formSubmit}>
-        {loading ? "Loading..." : "Sign In"}
-      </Button>
-      <Typography>
-        <UILink component={Link} to="/newaccount">Create Account</UILink>
-        <UILink component={Link} to="/forgotpassword">Forgot Password</UILink>
+    <div className={classes.root}>
+      <div className={classes.container}>
+        <Typography color="inherit" variant="h3" >
+          Sign In
+        </Typography>
+      </div>
+      <form onSubmit={formSubmit} className="login">
+        <FormGroup className={classes.container}>
+          <TextField
+            id="email"
+            type="email"
+            name="email"
+            value={userEmail}
+            placeholder="john@mail.com"
+            onChange={e => setUserEmail(e.target.value)}
+            aria-describedby="email-desc"
+            helperText="Login using your email"
+            label="Email Address"
+            disabled={loading}
+          />
+          <TextField
+            id="password"
+            type="password"
+            name="password"
+            value={userPassword}
+            placeholder="Password"
+            onChange={e => setUserPassword(e.target.value)}
+            aria-describedby="password-desc"
+            helperText="Enter password to finish the login form"
+            label="Password"
+            disabled={loading}
+          />
+        </FormGroup>
+        <FormGroup className={classes.container}>
+          <Button type="submit" className={classes.button} variant="contained" color="primary" disabled={loading} onClick={formSubmit}>
+            {loading ? "Loading..." : "Sign In"}
+          </Button>
+        </FormGroup>
+      </form>
+      <Typography className={classes.container}>
+        <UILink className={classes.link} component={Link} to="/newaccount">Create Account</UILink>
+        <UILink className={classes.link} component={Link} to="/forgotpassword">Forgot Password</UILink>
       </Typography>
       {error && <ErrorMessage errorMessage={error} />}
-    </form>
+    </div>
   );
 }
 
-export default Login;
+export default AppNavWrapper({ title: 'Login' })(Login);
