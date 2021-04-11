@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const FileController = require('./FileController');
-const { ROLES } = require('../helpers/constants');
 
 class AccountListingFileController extends FileController {
   constructor() {

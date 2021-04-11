@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import {
   Link,
-  Redirect
+  Redirect,
+  useLocation
 } from 'react-router-dom'
 
 /** Presentation */
@@ -53,6 +54,12 @@ function Login() {
   const auth = React.useContext(authContext);
   const { error, showError } = useErrorHandler(null);
   const classes = useStyles();
+  const location = useLocation();
+
+  let forwardTo = '/';
+  if (location.state && location.state.from) {
+    forwardTo = location.state.from;
+  }
 
   const authHandler = async () => {
     try {
@@ -78,7 +85,7 @@ function Login() {
   };
 
   if (auth.auth) {
-    return <Redirect to="/" />;
+    return <Redirect to={forwardTo} />;
   }
 
   return (
