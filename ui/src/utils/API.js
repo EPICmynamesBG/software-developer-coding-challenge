@@ -75,7 +75,7 @@ export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE
 export function fetchListingDetails(listingId) {
   const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}`;
   return apiRequest(url, "GET", undefined, {
-    include: ['photots']
+    include: ['photos']
   });
 }
 

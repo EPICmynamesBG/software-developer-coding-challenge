@@ -265,7 +265,10 @@ class BaseController {
           consumes: this._RouteConsumes,
           parameters: [
             ...pathParams,
-            { $ref: '#/parameters/id' }
+            { $ref: '#/parameters/id' },
+            {
+              $ref: '#/parameters/include'
+            }
           ],
           responses: {
             200: {

@@ -37,7 +37,7 @@ class BaseService {
       .filters(filters);
   }
 
-  static applyInclusion(query, includes) {
+  static applyInclusion(query, includes = []) {
     if (!includes) {
       return query;
     }
@@ -83,7 +83,7 @@ class BaseService {
     return this.constructor.applyInclusion(
       this.modelClass.query()
         .findOne({ id }),
-      additionalParams
+      additionalParams.include
     );
   }
 
@@ -93,7 +93,7 @@ class BaseService {
         .select('*')
         .first()
         .where(params),
-      additionalParams
+      additionalParams.include
     );
   }
 

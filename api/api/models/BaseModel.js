@@ -34,7 +34,6 @@ class BaseQueryBuilder extends Model.QueryBuilder {
   }
 
   filters(filters = []) {
-    console.log(filters);
     return filters.reduce(
       (builder, filterString) => {
         const args = convertFilterStringToArgs(filterString);
