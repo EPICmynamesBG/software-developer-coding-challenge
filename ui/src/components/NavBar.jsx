@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
 import { version } from "../../package.json";
 
 const primary = [
-  { name: 'Dashboard', route: '/' },
   { name: 'Market', route: '/market' },
   { name: 'My Listings', route: '/my-listings' }
 ];

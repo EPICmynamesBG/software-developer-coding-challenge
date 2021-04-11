@@ -24,9 +24,13 @@ function ListingDetails() {
   const history = useHistory();
   const auth = useContext(authContext);
 
+  const fetchDetails = auth.auth
+    ? id => API.fetchMyListingDetails(auth, id)
+    : id => API.fetchListingDetails(id);
+
   useEffect(() => {
     setIsLoading(true);
-    API.fetchListingDetails(auth, listingId)
+    fetchDetails(listingId)
       .then(setListing)
       .catch((e) => {
         console.error(e);

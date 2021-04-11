@@ -72,14 +72,18 @@ export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE
   return authenticatedApiRequest(authContext, url, "GET", queryParams);
 }
 
-export function fetchListingDetails(authContext, listingId) {
+export function fetchListingDetails(listingId) {
   const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}`;
-  return authenticatedApiRequest(authContext, url, "GET");
+  return apiRequest(url, "GET", undefined, {
+    include: ['photots']
+  });
 }
 
 export function fetchMyListingDetails(authContext, listingId) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings/${listingId}`;
-  return authenticatedApiRequest(authContext, url, "GET");
+  return authenticatedApiRequest(authContext, url, "GET", {
+    include: ['photos']
+  });
 }
 
 export function CreateListing(authContext, listingData = {}) {
