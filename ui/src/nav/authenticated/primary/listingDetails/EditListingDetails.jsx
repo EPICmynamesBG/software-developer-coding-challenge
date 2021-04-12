@@ -42,7 +42,9 @@ function EditListingDetails() {
     <Fragment>
       {error && <ErrorMessage errorMessage={error} />}
       {isLoading && <CircularProgress />}
-      Loaded!
+      <div>
+        This page is still under construction!
+      </div>
     </Fragment>
   );
 }
