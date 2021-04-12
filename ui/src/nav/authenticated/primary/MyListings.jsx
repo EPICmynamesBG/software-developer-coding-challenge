@@ -9,10 +9,12 @@ import AppNavWrapper from '../../../hoc/AppNavWrapper';
 import EnhancedTable from '../../../components/EnhancedTable';
 import { Button, makeStyles } from "@material-ui/core";
 
+const boolDisplay = val => val ? 'Yes' : 'No';
 const columns = [
-  { id: 'id', hidden: true, label: 'ID' },
   { id: 'vehicleVin', label: 'VIN' },
-  { id: 'createdAt', label: 'Created' }
+  { id: 'createdAt', label: 'Created' },
+  { id: 'isActive', label: 'Active', formatDisplay: boolDisplay },
+  { id: 'isComplete', label: 'Complete', formatDisplay: boolDisplay }
 ];
 
 const useStyles = makeStyles((theme) => ({

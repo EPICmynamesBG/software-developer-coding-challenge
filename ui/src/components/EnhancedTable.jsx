@@ -171,6 +171,10 @@ const useStyles = makeStyles(theme => ({
     top: 20,
     width: 1,
   },
+  cellPad: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
+  }
 }));
 
 export default function EnhancedTable(props) {
@@ -282,15 +286,16 @@ export default function EnhancedTable(props) {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>}
-                      {headCells.map(({ id }, index) => {
+                      {headCells.map(({ id, formatDisplay = val => val }, index) => {
                         if (index === 0) {
                           return (
-                            <TableCell key={id} component="th" id={labelId} scope="row" padding="none">
-                              {get(row, id)}
+                            <TableCell className={classes.cellPad} key={id} component="th" id={labelId} scope="row" padding="none">
+                              {formatDisplay(get(row, id))}
                             </TableCell>
                           );
                         }
-                        return <TableCell key={index} align="right">{get(row, id)}</TableCell>;
+                        console.log(row, id);
+                        return <TableCell className={classes.cellPad} key={index} align="middle">{formatDisplay(get(row, id))}</TableCell>;
                       })}
                     </TableRow>
                   );

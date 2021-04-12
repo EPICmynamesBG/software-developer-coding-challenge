@@ -11,7 +11,7 @@ import EnhancedTable from '../../../components/EnhancedTable';
 const columns = [
   { id: 'display.title', label: 'Name' },
   { id: 'vehicleVin', label: 'VIN' },
-  { id: 'vehicleNhtsaInfo.modelYear', numeric: true, label: 'Model Year' },
+  { id: 'vehicleNhtsaInfo.modelYear', label: 'Model Year' },
   { id: 'createdAt', label: 'Created' }
 ];
 
