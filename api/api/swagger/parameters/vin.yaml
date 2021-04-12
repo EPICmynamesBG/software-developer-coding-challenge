@@ -1,0 +1,5 @@
+in: path
+name: vin
+type: string
+description: vehicle identification number
+required: true

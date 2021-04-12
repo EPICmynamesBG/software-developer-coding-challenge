@@ -36,6 +36,19 @@ class NHTSA extends nhtsa {
       return this.makeRequest(url, resolve, reject);
     });
   }
+
+  static formatVinDecode(data) {
+    const formatted = data.Results.reduce((obj, entry) => {
+      if (!entry.Value) {
+        return obj;
+      }
+      return {
+        ...obj,
+        [entry.Variable]: entry.Value
+      };
+    }, {});
+    return formatted;
+  }
 }
 
 module.exports = NHTSA;

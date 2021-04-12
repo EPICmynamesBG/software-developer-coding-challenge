@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-const exclude = ['index.js', 'BaseController.js', 'FileController.js', 'ServiceLogController.js']
+const exclude = ['index.js', 'BaseController.js', 'FileController.js', 'NhtsaController.js']
 
 fs.readdirSync(`${__dirname}/`).forEach((file) => {
   if (file.match(/\.js$/) !== null && !exclude.includes(file)) {

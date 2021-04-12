@@ -76,7 +76,7 @@ class BaseController {
   }
 
   create(req, res) {
-    return this.responder('create', res, this.service.create(req.body))
+    return this.responder('create', res, () =>  this.service.create(snakeCaseKeys(req.body)))
   }
 
   createWithPathIds(req, res) {

@@ -3,6 +3,8 @@
 const AccountListingService = require('../services/AccountListingService');
 const BaseController = require('./BaseController');
 const { ROLES } = require('../helpers/constants');
+const nhtsa = require('../services/nhtsa');
+const { snakeCaseKeys } = require('../helpers/utils');
 
 class PublicListingController extends BaseController {
   constructor() {
@@ -31,6 +33,27 @@ class PublicListingController extends BaseController {
         get: []
       }
     };
+  }
+
+  async create(req, res) {
+    const createObj = { ...snakeCaseKeys(req.body) };
+    if (!createObj.vehicle_nhtsa_info) {
+      const { data } = await nhtsa.decodeVinExtended(createObj.vehicle_vin);
+      const formatted = nhtsa.formatVinDecode(data);
+      createObj.vehicle_nhtsa_info = snakeCaseKeys(formatted);
+    }
+    return this.responder('create', res, () => this.service.create(createObj))
+  }
+
+  async createWithPathIds(req, res) {
+    const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
+    const createObj = { ...snakeCaseKeys(req.body), ...pathIds };
+    if (!createObj.vehicle_nhtsa_info) {
+      const { data } = await nhtsa.decodeVinExtended(createObj.vehicle_vin);
+      const formatted = nhtsa.formatVinDecode(data);
+      createObj.vehicle_nhtsa_info = snakeCaseKeys(formatted);
+    }
+    return this.responder('create', res, () => this.service.create(createObj));
   }
 }
 

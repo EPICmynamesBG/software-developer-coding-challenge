@@ -109,3 +109,8 @@ export function CreateBid(authContext, listingId, bidData = {}) {
   const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}/bids`;
   return authenticatedApiRequest(authContext, url, "POST", undefined, bidData);
 }
+
+export function LookupVIN(vin) {
+  const url = `${process.env.REACT_APP_API_URI}/vinlookup/${vin}`;
+  return apiRequest(url, "GET");
+}

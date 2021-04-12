@@ -12,6 +12,7 @@ import { timestampToDatetimeLocalInputString, localeDatetimeToISOString } from '
 
 /** Presentation */
 import ErrorMessage from "../../../../components/ErrorMessage";
+import NhtsaPreview from "../../../../components/NhtsaPreview";
 
 /** Custom Hooks */
 import useErrorHandler from "../../../../utils/custom-hooks/ErrorHandler";
@@ -53,16 +54,26 @@ function CreateListing() {
   const classes = useStyles();
   const [formState, setFormState] = useState(JSON.parse(restoreFormState));
   const [isLoading, setIsLoading] = useState(false);
+  const [nhtsaData, setNhtsaData] = useState();
   const { error, showError } = useErrorHandler(null);
   const history = useHistory();
   const auth = useContext(authContext);
+
+  const { vehicleVin } = formState;
+
+  useEffect(() => {
+    API.LookupVIN(formState.vehicleVin)
+      .then((data) => {
+        setNhtsaData(data.results);
+      })
+      .catch(console.error);
+  }, [vehicleVin]);
 
   if (!auth.auth) {
     history.push('/logout');
   }
 
   const submit = async (data = {}) => {
-    console.log(data);
     const modifiedSubmission = {
       ...data,
       display: {
@@ -100,6 +111,16 @@ function CreateListing() {
     localStorage.setItem('createListingForm_State', JSON.stringify(newState));
     setFormState(newState);
   };
+  
+
+  const onVinBlur = (e) => {
+    console.log(e);
+    API.LookupVIN(formState.vehicleVin)
+      .then((data) => {
+        setNhtsaData(data.results);
+      })
+      .catch(console.error);
+  };
 
   return (
     <div>
@@ -107,10 +128,10 @@ function CreateListing() {
       {isLoading && <CircularProgress />}
       <form name="create-listing" className={classes.root} noValidate autoComplete="off" onSubmit={handleFormSubmit}>
         <FormGroup className={classes.container}>
-          <TextField id="vehicleVin" label="VIN" variant="outlined" required aria-required onChange={updateFormFieldValue} disabled={isLoading} defaultValue={formState.vehicleVin} />
-          <div>
-            Placeholder NHTSA preview
-          </div>
+          <TextField id="vehicleVin" label="VIN" variant="outlined" inputProps={{
+            pattern: '/.*{17}/'
+          }} required aria-required onChange={updateFormFieldValue} onBlur={onVinBlur} disabled={isLoading} defaultValue={formState.vehicleVin} />
+          {nhtsaData && <NhtsaPreview {...nhtsaData} />}
         </FormGroup>
         <FormGroup className={classes.container}>
           <FormLabel>Display Fields</FormLabel>

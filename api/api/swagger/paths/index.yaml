@@ -6,3 +6,5 @@
   $ref: './accounts_login.yaml'
 '/accounts/refresh':
   $ref: './accounts_refresh.yaml'
+'/vinlookup/{vin}':
+  $ref: './nhtsa_vin_lookup.yaml'
