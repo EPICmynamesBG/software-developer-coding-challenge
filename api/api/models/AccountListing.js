@@ -118,6 +118,7 @@ class AccountListing extends BaseModel {
     const Account = require('./Account');
     const CustomField = require('./CustomField');
     const File = require('./File');
+    const ListingBid = require('./ListingBid');
 
     return {
       account: {
@@ -147,6 +148,17 @@ class AccountListing extends BaseModel {
           from: `${this.tableName}.id`,
           to: `${File.tableName}.account_listing_id`
         }
+      },
+      winningBid: {
+        relation: BaseModel.HasOneRelation,
+        modelClass: ListingBid,
+        join: {
+          from: `${this.tableName}.id`,
+          to: `${ListingBid.tableName}.account_listing_id`
+        },
+        filter: query => query
+          .orderBy('bid_value', 'desc')
+          .limit(1)
       }
     };
   }

@@ -41,7 +41,6 @@ class BaseService {
     if (!includes) {
       return query;
     }
-    console.log(includes);
     return includes.reduce((qry, inclusion) => query.withGraphFetched(inclusion), query);
   }
 
