@@ -1,0 +1,2 @@
+* * * * * echo "cron"
+* * * * * node cron/bin/updateListingStatuses.js
