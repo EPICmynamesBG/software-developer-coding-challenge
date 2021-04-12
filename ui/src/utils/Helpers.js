@@ -68,6 +68,9 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
 
   const res = await response;
   if (res.status >= 200 && res.status < 300) {
+    if (res.status === 204) {
+      return undefined;
+    }
     return response.json();
   }
   const body = response.json();
@@ -84,8 +87,13 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
  * @return {Promise}
  */
 export const authenticatedApiRequest = async (authContext, url, method, queryParams, bodyParams, headers = {}) => {
-  const { auth, setUnauthStatus } = authContext;
+  const { auth = {}, setUnauthStatus } = authContext;
   try {
+    if (!auth) {
+      const err = new Error('Missing auth');
+      err.statusCode = 403;
+      throw err;
+    }
     const { token } = auth;
     return await apiRequest(url, method, bodyParams, queryParams, { Authorization: `Bearer ${token}`, ...headers });
   } catch (e) {

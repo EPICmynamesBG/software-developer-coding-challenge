@@ -7,7 +7,7 @@ import PaginatedListWrapper from '../../../hoc/PaginatedListWrapper';
 import AppNavWrapper from '../../../hoc/AppNavWrapper';
 
 import EnhancedTable from '../../../components/EnhancedTable';
-import { Button } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 
 const columns = [
   { id: 'id', hidden: true, label: 'ID' },
@@ -15,12 +15,26 @@ const columns = [
   { id: 'createdAt', label: 'Created' }
 ];
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: '100%',
+    padding: 20,
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'end',
+    '& > a': {
+      textDecoration: 'none',
+      margin: 'auto 0 auto auto'
+    }
+  }
+}));
 
 const useLoadListings = (authContext, page, pageSize, sort, filters) => API.fetchAccountListings(authContext, page, pageSize, sort, filters);
 
 function MyListings({ listings }) {
   const { list, isLoading, page, pageSize, sort, changeSort, setPage, setPageSize, error } = listings;
   const history = useHistory();
+  const classes = useStyles();
 
   const handleSortChange = async (field, direction) => {
     changeSort(field, direction);
@@ -40,9 +54,11 @@ function MyListings({ listings }) {
 
   return (
     <div>
-      <Link to="/my-listings/create">
-        <Button>Create</Button>
-      </Link>
+      <div className={classes.container}>
+        <Link to="/my-listings/create">
+          <Button variant="outlined" color="primary">Create</Button>
+        </Link>
+      </div>
       <EnhancedTable
         title="Market"
         rows={list}

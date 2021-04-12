@@ -33,17 +33,12 @@ function ListingDetails() {
   const [isLoading, setIsLoading] = useState(false);
   const { error, showError } = useErrorHandler(null);
   const { listingId } = useParams();
-  const history = useHistory();
   const auth = useContext(authContext);
   const classes = useStyles();
 
-  const fetchDetails = auth.auth
-    ? id => API.fetchMyListingDetails(auth, id)
-    : id => API.fetchListingDetails(id);
-
   useEffect(() => {
     setIsLoading(true);
-    fetchDetails(listingId)
+    API.fetchListingDetails(listingId)
       .then(setListing)
       .catch((e) => {
         console.error(e);
