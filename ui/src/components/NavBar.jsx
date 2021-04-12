@@ -24,7 +24,6 @@ const primary = [
 ];
 
 const secondary = [
-  { name: 'About', route: '/about' },
   { name: 'Logout', route: '/logout' }
 ];
 
@@ -64,6 +63,9 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  login: {
+    color: 'white'
   }
 }));
 
@@ -128,8 +130,8 @@ function NavBar({ pageTitle, pageClass, children }) {
               {auth.email}
             </div>
             :
-            <Link to="login">
-              <Button color="inherit">Login</Button>
+            <Link to="/login" className={classes.login}>
+              <Button color="white" variant="solid" className={classes.login}>Login</Button>
             </Link>
         }
         </Toolbar>

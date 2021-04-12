@@ -13,7 +13,8 @@ function PaginatedListWrapper(Component, fetchFn, {
   requiresAuthentication = true,
   propertyName = 'data',
   defaultSort = 'id',
-  defaultFilters = []
+  defaultFilters = [],
+  defaultPageSize = 50
 }) {
   return function PaginatedComponent(props) {
     const [list, setList] = useState([]);
@@ -21,7 +22,7 @@ function PaginatedListWrapper(Component, fetchFn, {
     const [sortField, setSortField] = useState(defaultSort);
     const [sortDir, setSortDir] = useState('asc');
     const [filters, setFilters] = useState(defaultFilters);
-    const [pageSize, setPageSize] = useState(50);
+    const [pageSize, setPageSize] = useState(defaultPageSize);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const loadedContext = useContext(authContext);

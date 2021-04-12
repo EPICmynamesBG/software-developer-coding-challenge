@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import get from 'lodash/get';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
@@ -285,11 +286,11 @@ export default function EnhancedTable(props) {
                         if (index === 0) {
                           return (
                             <TableCell key={id} component="th" id={labelId} scope="row" padding="none">
-                              {row[id]}
+                              {get(row, id)}
                             </TableCell>
                           );
                         }
-                        return <TableCell key={index} align="right">{row[id]}</TableCell>;
+                        return <TableCell key={index} align="right">{get(row, id)}</TableCell>;
                       })}
                     </TableRow>
                   );
