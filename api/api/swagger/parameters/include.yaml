@@ -6,4 +6,4 @@ required: false
 default: []
 items:
   type: string
-collectionFormat: multi
+collectionFormat: csv

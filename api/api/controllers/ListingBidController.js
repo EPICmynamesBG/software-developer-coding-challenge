@@ -3,6 +3,7 @@
 const ListingBidService = require('../services/ListingBidService');
 const BaseController = require('./BaseController');
 const { ROLES } = require('../helpers/constants');
+const { snakeCaseKeys } = require('../helpers/utils');
 
 class ListingBidController extends BaseController {
   constructor() {
@@ -22,15 +23,30 @@ class ListingBidController extends BaseController {
   static get Security() {
     return {
       [this.BaseRoute]: {
-        get: [ROLES.STANDARD],
+        get: [],
         post: [ROLES.STANDARD]
       },
       [`${this.BaseRoute}/{id}`]: {
-        get: [ROLES.STANDARD],
-        delete: [ROLES.STANDARD]
+        get: []
       }
     };
   }
+
+
+  create(req, res) {
+    const payload = {
+      ...req.body,
+      account_id: req.account.id
+    };
+    return this.responder('create', res, this.service.create(payload))
+  }
+
+  createWithPathIds(req, res) {
+    const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
+    const createObj = { ...snakeCaseKeys(req.body), ...pathIds, account_id: req.account.id };
+    return this.responder('create', res, () => this.service.create(createObj));
+  }
+
 }
 
 const instance = new ListingBidController();
