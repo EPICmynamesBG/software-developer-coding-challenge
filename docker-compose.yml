@@ -7,7 +7,7 @@ services:
     build:
       # target: development
       context: ./api
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/api/Dockerfile
     expose:
       - 3000
     ports:
@@ -24,11 +24,11 @@ services:
     build:
       # target: development
       context: ./api
-      dockerfile: ./cron/docker/Dockerfile
+      dockerfile: ./docker/cron/Dockerfile
     container_name: cron
     volumes:
       - ./api:/usr/src/app/
-      - api_node_modules:/usr/src/app/node_modules
+      - cron_node_modules:/usr/src/app/node_modules
     env_file: ./api/.env
   postgres:
     image: postgres:13.2
@@ -66,5 +66,6 @@ services:
       - ui_node_modules:/usr/src/app/node_modules
 volumes:
   api_node_modules:
+  cron_node_modules:
   ui_node_modules:
   pg_data:
