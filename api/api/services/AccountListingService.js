@@ -83,6 +83,9 @@ class AccountListingService extends BaseService {
 
   create(collection) {
     const toCreate = this.constructor._collectionCheck(collection);
+    if (moment(toCreate.start_at_timestamp).isAfter(moment(toCreate.end_at_timestamp))) {
+      throw new HttpError('End at must be after start at timestamp', 400, 'create');
+    }
     return super.create(toCreate);
   }
 
@@ -112,6 +115,10 @@ class AccountListingService extends BaseService {
       ...existing,
       ...updateObj
     };
+    if (moment(merged.start_at_timestamp).isAfter(moment(merged.end_at_timestamp))) {
+      throw new HttpError('End at must be after start at timestamp', 400, 'update');
+    }
+
     const fixedStates = this.constructor.checkStatuses(merged, true);
     return super.updateById(id, fixedStates);
   }

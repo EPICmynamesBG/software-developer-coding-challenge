@@ -38,7 +38,7 @@ class File extends BaseModel {
           type: 'string'
         },
         file_size: {
-          type: 'number'
+          type: ['number', 'string']
         },
         file_encoding: {
           type: 'string'

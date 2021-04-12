@@ -3,6 +3,7 @@
 const FileService = require('../services/FileService');
 const BaseController = require('./BaseController');
 const { ROLES } = require('../helpers/constants');
+const { snakeCaseKeys } = require('../helpers/utils');
 
 class FileController extends BaseController {
   constructor(idFields = []) {
@@ -36,7 +37,7 @@ class FileController extends BaseController {
         required: true
       },
       {
-        name: 'file_name',
+        name: 'fileName',
         type: 'string',
         description: 'custom file name',
         required: false
@@ -59,7 +60,7 @@ class FileController extends BaseController {
     const pathIds = this.constructor.Helper.getPathParams(req);
     const createObj = { ...req.body, ...pathIds };
     const file = req.files.upfile[0];
-    return this.responder('create', res, this.service.create(file, createObj));
+    return this.responder('create', res, () => this.service.create(file, snakeCaseKeys(createObj)));
   }
 }
 

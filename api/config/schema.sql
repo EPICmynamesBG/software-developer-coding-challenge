@@ -100,6 +100,8 @@ CREATE TABLE public.files (
     account_listing_id uuid,
     file_type text NOT NULL,
     file_name text NOT NULL,
+    file_encoding text NOT NULL,
+    file_size bigint NOT NULL,
     storage_path text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );

@@ -46,7 +46,6 @@ class ListingBidController extends BaseController {
     const createObj = { ...snakeCaseKeys(req.body), ...pathIds, account_id: req.account.id };
     return this.responder('create', res, () => this.service.create(createObj));
   }
-
 }
 
 const instance = new ListingBidController();

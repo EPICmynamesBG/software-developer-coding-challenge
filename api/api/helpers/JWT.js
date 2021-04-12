@@ -25,7 +25,6 @@ class JWT {
 
   refresh(token, refreshOptions = {}) {
     const payload = jwt.verify(token, this.privateKey, refreshOptions.verify);
-    console.log(payload);
     ['iat', 'exp', 'nbf', 'jti'].map(prop => _.unset(payload, prop));
     const jwtSignOptions = { ...this.options, jwtid: refreshOptions.jwtid };
     return jwt.sign(payload, this.privateKey, jwtSignOptions);

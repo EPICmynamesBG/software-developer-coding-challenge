@@ -170,7 +170,6 @@ function applySort(query, sort) {
       return `'${val}'`;
     })
     .join('->');
-  console.log('column', column);
   return query.orderBy(raw(column), sortDir);
 }
 

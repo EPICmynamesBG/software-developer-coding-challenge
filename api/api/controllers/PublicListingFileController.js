@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const FileController = require('./FileController');
+const { snakeCaseKeys } = require('../helpers/utils');
 
 class PublicListingFileController extends FileController {
   constructor() {
@@ -16,6 +17,14 @@ class PublicListingFileController extends FileController {
 
   static get BaseRoute() {
     return '/listings/{accountListingId}/files';
+  }
+
+  createWithPathIds(req, res) {
+    const pathIds = this.constructor.Helper.getPathParams(req);
+    const createObj = { ...req.body, ...pathIds, account_id: req.account.id };
+    console.log(createObj);
+    const file = req.files.upfile[0];
+    return this.responder('create', res, () => this.service.create(file, snakeCaseKeys(createObj)));
   }
 }
 

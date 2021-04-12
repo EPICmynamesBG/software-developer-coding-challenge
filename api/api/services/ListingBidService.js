@@ -25,7 +25,6 @@ class ListingBidService extends BaseService {
 
     const listingId = collection.account_listing_id;
     const currentMaxBid = await this.getCurrentListingMaxBid(listingId);
-    console.log(currentMaxBid, Number.parseFloat(collection.bid_value), Number.parseFloat(currentMaxBid))
     if (currentMaxBid !== null && Number.parseFloat(collection.bid_value) <= Number.parseFloat(currentMaxBid)) {
       throw new HttpError('Bid must exceed the current bid', 400, 'create');
     }
