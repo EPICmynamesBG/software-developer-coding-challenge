@@ -75,18 +75,37 @@ export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE
 export function fetchListingDetails(listingId) {
   const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}`;
   return apiRequest(url, "GET", undefined, {
-    include: ['photos']
+    include: ['photos', 'winningBid']
   });
 }
 
 export function fetchMyListingDetails(authContext, listingId) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings/${listingId}`;
   return authenticatedApiRequest(authContext, url, "GET", {
-    include: ['photos']
+    include: ['photos', 'winningBid']
   });
 }
 
 export function CreateListing(authContext, listingData = {}) {
   const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings`;
   return authenticatedApiRequest(authContext, url, "POST", undefined, listingData);
+}
+
+export function fetchBids(listingId, page = 0, pageSize = PAGE_SIZE, sort = '-createdAt', filters = []) {
+  const queryParams = {
+    pageSize: pageSize,
+    page: page,
+    sort: [sort],
+    include: ['account']
+  };
+  if (filters.length) {
+    queryParams.filters = filters;
+  }
+  const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}/bids`;
+  return apiRequest(url, "GET", undefined, queryParams);
+}
+
+export function CreateBid(authContext, listingId, bidData = {}) {
+  const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}/bids`;
+  return authenticatedApiRequest(authContext, url, "POST", undefined, bidData);
 }
