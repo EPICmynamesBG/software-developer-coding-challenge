@@ -1,4 +1,4 @@
-import { apiRequest, authenticatedApiRequest } from './Helpers';
+import { apiRequest, authenticatedApiRequest, fileUploadRequest } from './Helpers';
 
 export const PAGE_SIZE = 50;
 
@@ -111,6 +111,23 @@ export function CreateBid(authContext, listingId, bidData = {}) {
 }
 
 export function LookupVIN(vin) {
+  if (!vin) {
+    return Promise.reject(new Error('Missing vin'));
+  }
   const url = `${process.env.REACT_APP_API_URI}/vinlookup/${vin}`;
   return apiRequest(url, "GET");
+}
+
+/**
+ * 
+ * @param {object} auth 
+ * @param {string} listingId 
+ * @param {File} file 
+ */
+export function UploadListingFile(authContext, listingId, file) {
+  const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}/files`;
+  const formData = new FormData();
+  formData.append('upfile', file);
+  formData.append('fileName', file.name);
+  return fileUploadRequest(authContext, url, 'POST', formData);
 }

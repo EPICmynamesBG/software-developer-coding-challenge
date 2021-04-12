@@ -32,7 +32,8 @@ export default function ViewListingDetails({ listing }) {
     vehicleNhtsaInfo = {},
     isActive,
     isComplete,
-    winningBid = {}
+    winningBid = {},
+    photos = []
   } = listing;
   console.log(listing);
   const classes = useStyles();
@@ -58,7 +59,9 @@ export default function ViewListingDetails({ listing }) {
         {vehicleVin}
       </Typography>
       <div className={classes.photoBlock}>
+        {photos.map((photo) => {
 
+        })}
       </div>
       <div className={classes.infoBlock}>
         {Object.keys(vehicleNhtsaInfo).map((key) => {

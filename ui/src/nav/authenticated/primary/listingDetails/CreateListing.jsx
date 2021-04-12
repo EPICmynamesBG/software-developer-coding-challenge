@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -18,6 +19,8 @@ import NhtsaPreview from "../../../../components/NhtsaPreview";
 import useErrorHandler from "../../../../utils/custom-hooks/ErrorHandler";
 
 import { Button, CircularProgress, FormGroup, FormLabel, TextareaAutosize } from '@material-ui/core';
+import FormStateCacheHOC from '../../../../hoc/FormStateCacheHOC';
+import FileUploadArea from '../../../../components/FileUploadArea';
 
 // const localStorage = window.localStorage;
 
@@ -49,12 +52,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function CreateListing() {
-  const restoreFormState = localStorage.getItem('createListingForm_State') || '{}';
+function CreateListing({ formCache = {}}) {
   const classes = useStyles();
-  const [formState, setFormState] = useState(JSON.parse(restoreFormState));
+  const [formState, setFormState] = useState(formCache.state);
   const [isLoading, setIsLoading] = useState(false);
   const [nhtsaData, setNhtsaData] = useState();
+  const [isLookingUpVin, setIsLookingUpVin] = useState(false);
   const { error, showError } = useErrorHandler(null);
   const history = useHistory();
   const auth = useContext(authContext);
@@ -62,18 +65,39 @@ function CreateListing() {
   const { vehicleVin } = formState;
 
   useEffect(() => {
+    if (isLookingUpVin) {
+      return;
+    }
+    if (formState.vehicleVin.length !== 17) {
+      return;
+    }
+    setIsLookingUpVin(true);
     API.LookupVIN(formState.vehicleVin)
       .then((data) => {
         setNhtsaData(data.results);
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => {
+        setIsLookingUpVin(false);
+      });
   }, [vehicleVin]);
 
   if (!auth.auth) {
     history.push('/logout');
   }
 
+  const uploadPhotos = async (photos = [], listingId) => {
+    for (const file of photos) {
+      try {
+        await API.UploadListingFile(auth, listingId, file);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
   const submit = async (data = {}) => {
+    const photos = data.photos;
     const modifiedSubmission = {
       ...data,
       display: {
@@ -85,10 +109,12 @@ function CreateListing() {
     };
     delete modifiedSubmission.title;
     delete modifiedSubmission.description;
+    delete modifiedSubmission.photos;
     try {
       setIsLoading(true);
       const { accountlisting: listing } = await API.CreateListing(auth, modifiedSubmission);
-      localStorage.setItem('createListingForm_State', '{}');
+      await uploadPhotos(photos, listing.id);
+      formCache.clearState();
       history.push(`/my-listings/${listing.id}`);
     } catch (err) {
       console.error(err);
@@ -108,13 +134,12 @@ function CreateListing() {
       ...formState,
       [e.target.id]: e.target.value
     };
-    localStorage.setItem('createListingForm_State', JSON.stringify(newState));
+    formCache.saveState(newState);
     setFormState(newState);
   };
   
 
   const onVinBlur = (e) => {
-    console.log(e);
     API.LookupVIN(formState.vehicleVin)
       .then((data) => {
         setNhtsaData(data.results);
@@ -137,9 +162,12 @@ function CreateListing() {
           <FormLabel>Display Fields</FormLabel>
           <TextField id="title" label="Title" aria-label="title" required aria-required onChange={updateFormFieldValue} disabled={isLoading} defaultValue={formState.title} />
           <TextareaAutosize id="description" aria-label="empty textarea" placeholder="Description" rowsMin={3} required aria-required onChange={updateFormFieldValue} disabled={isLoading} defaultValue={formState.description} />
-          <div>
-            Placeholder Image uploading
-          </div>
+          <FileUploadArea
+            inputProps={{
+              id: 'photos'
+            }}
+            onChange={updateFormFieldValue}
+          />
         </FormGroup>
         <FormGroup className={classes.container}>
           <FormLabel>Timing</FormLabel>
@@ -163,7 +191,8 @@ function CreateListing() {
             type="datetime-local"
             className={classes.dateField}
             InputLabelProps={{
-              shrink: true
+              shrink: true,
+              min: formState.startAtTimestamp
             }}
             required
             aria-required
@@ -181,6 +210,16 @@ function CreateListing() {
   );
 }
 
+CreateListing.propTypes = {
+  formCache: PropTypes.shape({
+    state: PropTypes.object.isRequired,
+    clearState: PropTypes.func.isRequired,
+    saveState: PropTypes.func.isRequired
+  }).isRequired
+};
+
 export default (
-  AppNavWrapper({ title: 'Create Listing' })(CreateListing)
+  AppNavWrapper({ title: 'Create Listing' })(
+    FormStateCacheHOC(CreateListing, { formName: 'createListing' })
+  )
 );

@@ -77,6 +77,64 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
   throw new HttpError(body.message, response.status, response);
 };
 
+export const fileUploadRequest = async (authContext, url, method, file, headers = {}) => {
+  const { auth = {}, setUnauthStatus } = authContext;
+  try {
+    if (!auth) {
+      const err = new Error('Missing auth');
+      err.statusCode = 403;
+      throw err;
+    }
+    const { token } = auth;
+    const urlObject = new URL(url);
+    const response = await fetch(urlObject, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...headers
+      },
+      body: file
+    });
+
+    const res = await response;
+    if (res.status >= 200 && res.status < 300) {
+      if (res.status === 204) {
+        return undefined;
+      }
+      return response.json();
+    }
+    const body = response.json();
+    throw new HttpError(body.message, response.status, response);
+  } catch (e) {
+    if (e.statusCode === 403) {
+      setUnauthStatus();
+      return;
+    }
+    throw e;
+  }
+  const urlObject = new URL(url);
+  const response = await fetch(urlObject, {
+    method,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
+      ...headers
+    },
+    body: file
+  });
+
+  const res = await response;
+  if (res.status >= 200 && res.status < 300) {
+    if (res.status === 204) {
+      return undefined;
+    }
+    return response.json();
+  }
+  const body = response.json();
+  throw new HttpError(body.message, response.status, response);
+};
+
+
 /**
  * @param  {string}  token
  * @param  {string}  url
