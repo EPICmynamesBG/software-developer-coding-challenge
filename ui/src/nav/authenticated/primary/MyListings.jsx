@@ -34,19 +34,19 @@ const useStyles = makeStyles((theme) => ({
 const useLoadListings = (authContext, page, pageSize, sort, filters) => API.fetchAccountListings(authContext, page, pageSize, sort, filters);
 
 function MyListings({ listings }) {
-  const { list, isLoading, page, pageSize, sort, changeSort, setPage, setPageSize, error } = listings;
+  const { list, isLoading, page, pageSize, changeSort, setPage, setPageSize, error } = listings;
   const history = useHistory();
   const classes = useStyles();
 
-  const handleSortChange = async (field, direction) => {
+  const handleSortChange = (field, direction) => {
     changeSort(field, direction);
   }
 
-  const handlePageChange = async (pageNum) => {
+  const handlePageChange = (pageNum) => {
     setPage(pageNum);
   }
 
-  const handlePageSizeChange = async (size) => {
+  const handlePageSizeChange = (size) => {
     setPageSize(size);
   }
 
@@ -62,7 +62,7 @@ function MyListings({ listings }) {
         </Link>
       </div>
       <EnhancedTable
-        title="Market"
+        title="My Listings"
         rows={list}
         page={page}
         rowsPerPage={pageSize}
@@ -74,6 +74,7 @@ function MyListings({ listings }) {
         fillHeight={false}
         error={error}
         handleRowClick={handleRowClick}
+        isLoading={isLoading}
       />
     </div>
   );

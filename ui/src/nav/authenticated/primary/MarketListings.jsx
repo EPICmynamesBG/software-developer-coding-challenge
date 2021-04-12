@@ -23,15 +23,15 @@ function MarketListings({ listings }) {
   const { list, isLoading, page, pageSize, sort, error, changeSort, fetchData, setPage, setPageSize } = listings;
   const history = useHistory();
 
-  const handleSortChange = async (field, direction) => {
+  const handleSortChange = (field, direction) => {
     changeSort(field, direction);
   }
 
-  const handlePageChange = async (pageNum) => {
+  const handlePageChange = (pageNum) => {
     setPage(pageNum);
   }
 
-  const handlePageSizeChange = async (size) => {
+  const handlePageSizeChange = (size) => {
     setPageSize(size);
   }
   
@@ -42,7 +42,7 @@ function MarketListings({ listings }) {
   return (
     <div>
       <EnhancedTable
-        title="Market"
+        title="Market Listings"
         rows={list}
         page={page}
         rowsPerPage={pageSize}

@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function BidList(props) {
-  const { listingId, appendData = [], resetAppended = () => {} } = props;
+  const { listingId, appendData = [] } = props;
 
   const fetchBids = page => API.fetchBids(listingId, page, 5);
 
@@ -22,7 +22,6 @@ function BidList(props) {
 
   const loadMore = async () => {
     try {
-      resetAppended();
       setIsLoading(true);
       const moreData = await fetchBids(pageNum);
       if (moreData) {
@@ -41,19 +40,17 @@ function BidList(props) {
       .then(() => null);
   }, []);
 
-  useEffect(() => {
-    setData([...appendData, ...data]);
-  }, [appendData]);
+  const renderData = [...appendData, ...data];
 
   return (
     <div className={classes.root}>
       <div className={classes.container}>
-        {data.map((obj) => {
+        {renderData.map((obj) => {
           return <Bid key={obj.id} {...obj} />
         })}
-        {data.length === 0 && emptyMessage}
+        {renderData.length === 0 && emptyMessage}
       </div>
-      {data.length > 0 && (
+      {renderData.length > 0 && (
         <div className={classes.loadMore}>
           <Button endIcon={isLoading ? <CircularProgress /> : null} type="button" onClick={loadMore} variant="link" disabled={isLoading}>Load More</Button>
         </div>
