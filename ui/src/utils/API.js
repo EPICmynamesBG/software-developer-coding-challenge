@@ -131,3 +131,8 @@ export function UploadListingFile(authContext, listingId, file) {
   formData.append('fileName', file.name);
   return fileUploadRequest(authContext, url, 'POST', formData);
 }
+
+export function publicPhotoUri(photo) {
+  const { accountListingId, id: photoId } = photo;
+  return `${process.env.REACT_APP_API_URI}/listings/${accountListingId}/files/${photoId}/render`;
+}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -68,7 +69,7 @@ function CreateListing({ formCache = {}}) {
     if (isLookingUpVin) {
       return;
     }
-    if (formState.vehicleVin.length !== 17) {
+    if (get(formState, 'vehicleVin', '').length !== 17) {
       return;
     }
     setIsLookingUpVin(true);

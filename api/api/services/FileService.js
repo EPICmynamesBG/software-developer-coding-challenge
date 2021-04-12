@@ -43,6 +43,11 @@ class FileService extends BaseService {
     };
     return super.create(obj);
   }
+
+  openReadStream(file) {
+    const interfaceInstance = this.FileStorageInterface.fromFileModel(file);
+    return interfaceInstance.openReadStream();
+  }
 }
 
 module.exports = FileService;

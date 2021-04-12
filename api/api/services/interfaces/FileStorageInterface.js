@@ -25,6 +25,7 @@ class FileStorageInterface {
 
   get storedAt() { return this._filePath; }
   get fileName() { return this._fileName; }
+  get encoding() { return this._fileEncoding; }
 
   /**
    * Load the stored file
@@ -46,7 +47,13 @@ class FileStorageInterface {
   }
 
   static fromFileModel(fileModel) {
-    return new this(fileModel.storage_path);
+    const instance = new this(fileModel.storage_path, fileModel.file_name);
+    instance._fileEncoding = fileModel.file_encoding;
+    return instance;
+  }
+
+  openReadStream() {
+    throw new Error('Not Implemented');
   }
 }
 

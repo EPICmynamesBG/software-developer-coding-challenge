@@ -34,5 +34,6 @@ module.exports = {
   constructor: PublicListingFileController,
   getAll: instance.getAllByPathIds.bind(instance),
   getById: instance.getByPathIds.bind(instance),
-  create: instance.createWithPathIds.bind(instance)
+  create: instance.createWithPathIds.bind(instance),
+  renderFile: instance.renderFile.bind(instance)
 };

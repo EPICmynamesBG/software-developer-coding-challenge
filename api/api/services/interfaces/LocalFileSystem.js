@@ -55,6 +55,10 @@ class LocalFileSystem extends FileStorageInterface {
   static fileAlreadyExists(fullPath) {
     return fs.existsSync(fullPath);
   }
+
+  openReadStream() {
+    return fs.createReadStream(this.storedAt);
+  }
 }
 
 module.exports = LocalFileSystem;

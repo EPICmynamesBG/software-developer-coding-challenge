@@ -18,6 +18,7 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+  - image/*
 securityDefinitions:
   BearerAuth:
     type: apiKey
