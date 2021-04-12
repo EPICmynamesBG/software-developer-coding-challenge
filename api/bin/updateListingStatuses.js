@@ -1,11 +1,11 @@
 'use strict';
 
-require('../../config/db').initModels();
+require('../config/db').initModels();
 
-const logger = require('../../api/helpers/logger');
+const logger = require('../api/helpers/logger');
 // const logger = console;
-const AccountListingService = require('../../api/services/AccountListingService').constructor;
-const AccountListing = require('../../api/models/AccountListing');
+const AccountListingService = require('../api/services/AccountListingService').constructor;
+const AccountListing = require('../api/models/AccountListing');
 
 process.on('uncaughtException', (e) => {
   logger.error(e);
