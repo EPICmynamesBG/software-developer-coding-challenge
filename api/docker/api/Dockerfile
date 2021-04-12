@@ -8,5 +8,6 @@ COPY ./package.json /usr/src/app/
 COPY ./package-lock.json /usr/src/app/
 
 RUN npm install
+RUN npm install -g swagger
 
 CMD [ "npm", "start" ]

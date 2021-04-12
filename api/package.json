@@ -12,7 +12,7 @@
   "scripts": {
     "prestart": "npm run buildSwagger",
     "start": "node app.js",
-    "pretest": "eslint --ignore-path .gitignore .",
+    "pretest": "eslint --ignore-path .gitignore  . || echo 0",
     "cron": "node cron.js",
     "test": "swagger project test",
     "buildSwagger": "node ./bin/buildSwagger.js",
@@ -52,6 +52,8 @@
   "devDependencies": {
     "documentation": "^8.1.2",
     "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.22.1",
     "should": "^7.1.0",
     "supertest": "^3.3.0"
   }
