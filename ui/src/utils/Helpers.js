@@ -112,31 +112,11 @@ export const fileUploadRequest = async (authContext, url, method, file, headers 
     }
     throw e;
   }
-  const urlObject = new URL(url);
-  const response = await fetch(urlObject, {
-    method,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "multipart/form-data",
-      ...headers
-    },
-    body: file
-  });
-
-  const res = await response;
-  if (res.status >= 200 && res.status < 300) {
-    if (res.status === 204) {
-      return undefined;
-    }
-    return response.json();
-  }
-  const body = response.json();
-  throw new HttpError(body.message, response.status, response);
 };
 
 
 /**
- * @param  {string}  token
+ * @param  {object}  authContext
  * @param  {string}  url
  * @param  {string}  method
  * @param  {Object}  queryParams

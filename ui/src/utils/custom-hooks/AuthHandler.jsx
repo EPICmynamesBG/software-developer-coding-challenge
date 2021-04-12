@@ -4,8 +4,6 @@ import * as API from '../API';
 
 const useAuthHandler = (initialState) => {
   const [auth, setAuth] = React.useState(initialState);
-  const [isRefreshing, setIsRefreshing] = React.useState(false);
-  const [lastRefreshed, setLastRefreshed] = React.useState(null);
   const timeout = React.useRef();
 
   let setAuthStatus;
@@ -15,7 +13,6 @@ const useAuthHandler = (initialState) => {
   };
 
   const refresh = async () => {
-    console.log('refreshing');
     try {
       const { token } = await API.Refresh({ auth: auth });
       setAuthStatus({

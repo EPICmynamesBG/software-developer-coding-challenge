@@ -24,16 +24,8 @@ import ErrorMessage from '../components/ErrorMessage';
 
 const noop = () => {};
 
-// const headCells = [
-//   { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-//   { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-//   { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-//   { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-//   { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
-// ];
-
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells = [], title, enableCheckboxes, isLoading = false } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells = [], enableCheckboxes, isLoading = false } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
@@ -85,7 +77,11 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
   enableCheckboxes: PropTypes.bool,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  headCells: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    label: PropTypes.string
+  }))
 };
 
 const useToolbarStyles = makeStyles(theme => ({
@@ -136,7 +132,7 @@ const EnhancedTableToolbar = props => {
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
+          <IconButton disabled aria-label="filter list">
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -147,6 +143,7 @@ const EnhancedTableToolbar = props => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  title: PropTypes.string
 };
 
 const useStyles = makeStyles(theme => ({
@@ -178,7 +175,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function EnhancedTable(props) {
-  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], primaryColumn = 'name', title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true, enableCheckboxes = false, handleRowClick = noop, error, isLoading = false } = props;
+  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true, enableCheckboxes = false, handleRowClick = noop, error, isLoading = false } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(headCells[0].id);
@@ -321,3 +318,23 @@ export default function EnhancedTable(props) {
     </div>
   );
 }
+
+EnhancedTable.propTypes = {
+  rows: PropTypes.arrayOf(PropTypes.object),
+  page: PropTypes.number,
+  rowsPerPage: PropTypes.number,
+  headCells: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    label: PropTypes.string,
+    formatDisplay: PropTypes.func
+  })),
+  title: PropTypes.string,
+  handleSortChange: PropTypes.func,
+  handlePageChange: PropTypes.func,
+  handlePageSizeChange: PropTypes.func,
+  fillHeight: PropTypes.bool,
+  enableCheckboxes: PropTypes.func,
+  handleRowClick: PropTypes.func,
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.instanceOf(Error)]),
+  isLoading: PropTypes.bool
+};

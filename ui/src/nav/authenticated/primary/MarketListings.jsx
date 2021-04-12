@@ -20,7 +20,7 @@ const useLoadListings = (authContext, page, pageSize, sort, filters) => {
 }
 
 function MarketListings({ listings }) {
-  const { list, isLoading, page, pageSize, sort, error, changeSort, fetchData, setPage, setPageSize } = listings;
+  const { list, isLoading, page, pageSize, changeSort, setPage, setPageSize } = listings;
   const history = useHistory();
 
   const handleSortChange = (field, direction) => {

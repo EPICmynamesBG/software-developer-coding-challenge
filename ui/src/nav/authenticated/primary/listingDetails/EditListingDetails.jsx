@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AppNavWrapper from '../../../../hoc/AppNavWrapper';
 
 import { authContext } from './../../../../contexts/AuthContext';
@@ -22,7 +22,6 @@ function EditListingDetails() {
   const [isLoading, setIsLoading] = useState(false);
   const { error, showError } = useErrorHandler(null);
   const { listingId } = useParams();
-  const history = useHistory();
   const auth = useContext(authContext);
 
   useEffect(() => {

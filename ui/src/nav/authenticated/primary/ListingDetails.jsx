@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useParams, useHistory, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { authContext } from './../../../contexts/AuthContext';
 import * as API from '../../../utils/API';
 import AppNavWrapper from '../../../hoc/AppNavWrapper';

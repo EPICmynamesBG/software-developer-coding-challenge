@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Button, Typography, Link as UILink, FormGroup, TextField } from '@material-ui/core';
-import { Redirect, Link } from 'react-router-dom';
+import { Button, Typography, FormGroup, TextField } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
 /** Presentation */

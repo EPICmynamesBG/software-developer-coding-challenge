@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function Bid(bidProps) {
+function Bid(bidProps) {
   const {
     bid,
     account = {},
@@ -34,3 +34,15 @@ export default function Bid(bidProps) {
     </span>
   );
 }
+
+Bid.propTypes = {
+  id: PropTypes.string.isRequired,
+  bid: PropTypes.number,
+  bidValue: PropTypes.string,
+  account: PropTypes.shape({
+    email: PropTypes.string
+  }),
+  createdAt: PropTypes.string
+};
+
+export default Bid;

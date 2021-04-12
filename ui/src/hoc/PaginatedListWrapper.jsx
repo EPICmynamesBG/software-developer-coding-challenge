@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import { authContext } from "../contexts/AuthContext";
 

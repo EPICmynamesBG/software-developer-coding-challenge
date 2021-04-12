@@ -5,7 +5,7 @@ import get from 'lodash/get';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import AppNavWrapper from '../../../../hoc/AppNavWrapper';
 
 import { authContext } from './../../../../contexts/AuthContext';
@@ -23,9 +23,7 @@ import { Button, CircularProgress, FormGroup, FormLabel, TextareaAutosize } from
 import FormStateCacheHOC from '../../../../hoc/FormStateCacheHOC';
 import FileUploadArea from '../../../../components/FileUploadArea';
 
-// const localStorage = window.localStorage;
-
-const { useEffect, useState, useContext, Fragment } = React;
+const { useEffect, useState, useContext } = React;
 
 const useStyles = makeStyles((theme) => ({
   root: {
