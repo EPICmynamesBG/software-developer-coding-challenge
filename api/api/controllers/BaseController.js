@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const { ROLES } = require('../helpers/constants');
-const { handleResponse, snakeCaseKeys } = require('../helpers/utils');
+const utils = require('../helpers/utils');
 
 const Helper = {
   getPathParams: (req, omitPathVars = []) => {
@@ -13,7 +13,7 @@ const Helper = {
         _.set(returnObj, field, obj.value);
       }
     });
-    return snakeCaseKeys(
+    return utils.snakeCaseKeys(
       _.omitBy(returnObj, (val, key) => omitPathVars.includes(key))
     );
   },
@@ -25,7 +25,7 @@ const Helper = {
         _.set(returnObj, field, obj.value);
       }
     });
-    return snakeCaseKeys(
+    return utils.snakeCaseKeys(
       _.omitBy(returnObj, (val, key) => omitQueryVars.includes(key))
     );
   }
@@ -60,28 +60,28 @@ class BaseController {
       case 'create':
       case 'update':
       case 'delete':
-        handleResponse(undefined, {
+        utils.handleResponse(undefined, {
           action: _.toUpper(action),
           [this.objectName]: results
         }, response);
         break;
       default:
         // select
-        handleResponse(undefined, results, response);
+        utils.handleResponse(undefined, results, response);
       }
     } catch (e) {
-      handleResponse(e, undefined, response);
+      utils.handleResponse(e, undefined, response);
     }
     return;
   }
 
   create(req, res) {
-    return this.responder('create', res, () =>  this.service.create(snakeCaseKeys(req.body)))
+    return this.responder('create', res, () =>  this.service.create(utils.snakeCaseKeys(req.body)))
   }
 
   createWithPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
-    const createObj = { ...snakeCaseKeys(req.body), ...pathIds };
+    const createObj = { ...utils.snakeCaseKeys(req.body), ...pathIds };
     return this.responder('create', res, () => this.service.create(createObj));
   }
 
@@ -115,14 +115,14 @@ class BaseController {
   updateById(req, res) {
     const currentId = _.get(req, 'swagger.params.id.value');
     // intentionally prevent updating id
-    const body = _.omit(snakeCaseKeys(req.body), ['id']);
+    const body = _.omit(utils.snakeCaseKeys(req.body), ['id']);
     return this.responder('update', res, () => this.service.updateById(currentId, body));
   }
 
   updateByPathIds(req, res) {
     const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
     // intentionally prevent updating id
-    const body = _.omit(snakeCaseKeys(req.body), ['id']);
+    const body = _.omit(utils.snakeCaseKeys(req.body), ['id']);
     return this.responder('update', res, () => this.service.update(pathIds, body));
   }
 

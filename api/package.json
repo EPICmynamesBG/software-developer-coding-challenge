@@ -43,7 +43,6 @@
     "objection": "^2.2.15",
     "pg": "^8.5.1",
     "request": "^2.88.0",
-    "sinon": "^5.1.1",
     "swagger-parser": "^4.1.0",
     "swagger-tools": "^0.10.4",
     "uuid": "^3.3.2",
@@ -55,6 +54,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.22.1",
     "should": "^7.1.0",
+    "sinon": "^10.0.0",
     "supertest": "^3.3.0"
   }
 }
