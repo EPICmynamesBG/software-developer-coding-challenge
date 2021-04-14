@@ -163,5 +163,3 @@ export function localeDatetimeToISOString(localTimestamp) {
   console.log(d);
   return d.toISOString();
 }
-
-

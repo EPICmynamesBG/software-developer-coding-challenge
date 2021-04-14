@@ -155,7 +155,10 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+    minWidth: 750
+  },
+  tableRow: {
+    cursor: 'pointer'
   },
   visuallyHidden: {
     border: 0,
@@ -171,9 +174,6 @@ const useStyles = makeStyles(theme => ({
   cellPad: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2)
-  },
-  'table tr': {
-    cursor: 'pointer'
   }
 }));
 
@@ -209,7 +209,7 @@ export default function EnhancedTable(props) {
     if (enableCheckboxes) {
       const selectedIndex = selected.indexOf(name);
       let newSelected = [];
-  
+
       if (selectedIndex === -1) {
         newSelected = newSelected.concat(selected, name);
       } else if (selectedIndex === 0) {
@@ -222,8 +222,8 @@ export default function EnhancedTable(props) {
           selected.slice(selectedIndex + 1),
         );
       }
-  
-      setSelected(newSelected);  
+
+      setSelected(newSelected);
     } else {
       handleRowClick(event, name);
     }
@@ -267,7 +267,7 @@ export default function EnhancedTable(props) {
             <TableBody>
               {isLoading && <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={headCells.length} style={{ textAlign: 'center' }}>
-                    <CircularProgress /> 
+                    <CircularProgress />
                   </TableCell>
                 </TableRow>}
               {rows
@@ -277,6 +277,7 @@ export default function EnhancedTable(props) {
 
                   return (
                     <TableRow
+                      className={classes.tableRow}
                       hover
                       onClick={event => handleClick(event, row)}
                       role={enableCheckboxes ? "checkbox" : "button"}
@@ -292,14 +293,11 @@ export default function EnhancedTable(props) {
                         />
                       </TableCell>}
                       {headCells.map(({ id, formatDisplay = val => val }, index) => {
-                        if (index === 0) {
-                          return (
-                            <TableCell className={classes.cellPad} key={id} component="th" id={labelId} scope="row" padding="none">
-                              {formatDisplay(get(row, id))}
-                            </TableCell>
-                          );
-                        }
-                        return <TableCell className={classes.cellPad} key={index} align="middle">{formatDisplay(get(row, id))}</TableCell>;
+                        return (
+                          <TableCell className={classes.cellPad} key={id} component="tr" id={labelId} align="middle" scope="row" padding="none">
+                            {formatDisplay(get(row, id))}
+                          </TableCell>
+                        );
                       })}
                     </TableRow>
                   );
