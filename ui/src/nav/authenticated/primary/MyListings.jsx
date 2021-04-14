@@ -14,7 +14,8 @@ const columns = [
   { id: 'vehicleVin', label: 'VIN' },
   { id: 'createdAt', label: 'Created' },
   { id: 'isActive', label: 'Active', formatDisplay: boolDisplay },
-  { id: 'isComplete', label: 'Complete', formatDisplay: boolDisplay }
+  { id: 'isComplete', label: 'Complete', formatDisplay: boolDisplay },
+  { id: 'endAtTimestamp', label: 'Ending At' }
 ];
 
 const useStyles = makeStyles((theme) => ({

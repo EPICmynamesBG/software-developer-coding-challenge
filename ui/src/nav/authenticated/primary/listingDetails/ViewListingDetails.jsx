@@ -50,16 +50,15 @@ export default function ViewListingDetails({ listing }) {
     isActive,
     isComplete,
     winningBid = {},
-    photos = []
+    photos = [],
+    endAtTimestamp
   } = listing;
-  console.log(listing);
   const classes = useStyles();
   const [created, setCreated] = useState([]);
 
   const onBidCreate = (createdBid) => {
     setCreated([createdBid, ...created]);
   };
-  console.log(photos);
 
   return (
     <div className={classes.root}>
@@ -73,6 +72,9 @@ export default function ViewListingDetails({ listing }) {
         This listing is no longer active
       </Typography>}
       {isComplete && winningBid && <Bid className={classes.winningBid} {...winningBid} />}
+      {isActive && <Typography color="inherit" variant="subtitle1">
+          Bidding ends at {endAtTimestamp}
+        </Typography>}
       <Typography color="inherit" variant="h6">
         {vehicleVin}
       </Typography>
