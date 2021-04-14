@@ -24,7 +24,6 @@ post:
           password:
             type: string
             example: '********'
-            pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})'
   responses:
     "200":
       description: Success

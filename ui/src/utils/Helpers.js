@@ -73,7 +73,7 @@ export const apiRequest = async (url, method, bodyParams, queryParams, headers =
     }
     return response.json();
   }
-  const body = response.json();
+  const body = await response.json();
   throw new HttpError(body.message, response.status, response);
 };
 

@@ -95,7 +95,10 @@ class Account extends BaseModel {
     if (!account) {
       return null;
     }
-    await account.validatePassword(password);
+    const isSame = await account.validatePassword(password);
+    if (!isSame) {
+      return null;
+    }
     return account;
   }
 }
