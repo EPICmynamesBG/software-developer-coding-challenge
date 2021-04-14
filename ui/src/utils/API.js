@@ -58,6 +58,15 @@ export function fetchMarketListings(page = 0, pageSize = PAGE_SIZE, sort = '+id'
   return apiRequest(url, "GET", undefined, queryParams);
 }
 
+export function fetchCountOfMarketListings(filters = []) {
+  const queryParams = {};
+  if (filters.length) {
+    queryParams.filters = filters;
+  }
+  const url = `${process.env.REACT_APP_API_URI}/listings/count`;
+  return apiRequest(url, "GET", undefined, queryParams);
+}
+
 export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE, sort = '+id', filters = []) {
   const queryParams = {
     pageSize: pageSize,
@@ -71,6 +80,18 @@ export function fetchAccountListings(authContext, page = 0, pageSize = PAGE_SIZE
   const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings`;
   return authenticatedApiRequest(authContext, url, "GET", queryParams);
 }
+
+export function fetchCountOfAccountListings(authContext, filters = []) {
+  const queryParams = {
+    include: ['photos']
+  };
+  if (filters.length) {
+    queryParams.filters = filters;
+  }
+  const url = `${process.env.REACT_APP_API_URI}/accounts/${authContext.auth.id}/listings/count`;
+  return authenticatedApiRequest(authContext, url, "GET", queryParams);
+}
+
 
 export function fetchListingDetails(listingId) {
   const url = `${process.env.REACT_APP_API_URI}/listings/${listingId}`;

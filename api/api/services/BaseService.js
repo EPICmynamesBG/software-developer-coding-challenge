@@ -1,12 +1,13 @@
 'use strict';
 
 const _ = require('lodash');
+const logger = require('../helpers/logger');
 
 /**
  * @typedef {Pagination}
  * @type {object}
  * @property {number} page
- * @property {number} pageSize
+ * @property {number} page_size
  * @property {string} sort
  */
 
@@ -20,7 +21,7 @@ class BaseService {
     if (!pagination) {
       return query;
     }
-    const { pageSize = 50, page = 0 } = pagination;
+    const { page_size: pageSize = 50, page = 0 } = pagination;
     return query
       .limit(pageSize)
       .offset(pageSize * page);
@@ -95,6 +96,25 @@ class BaseService {
     return this.modelClass.query()
       .insert(collection)
       .returning('*');
+  }
+
+  async countAll(params = undefined, additionalParams = {}) {
+    let query = this.modelClass.query()
+      .count('*')
+      .skipUndefined()
+      .where(params)
+      .first();
+    query = _.flow(
+      (qry) => this.constructor.applyFilters(qry, additionalParams.filters),
+      (qry) => this.constructor.applyInclusion(qry, additionalParams.include),
+    )(query);
+    const { count = '0' } = await query;
+    try {
+      return Number.parseInt(count, 10);
+    } catch (e) {
+      logger.warn('Failed to parseInt for countAll operation', { count });
+      return count;
+    }
   }
 
   getAll(pagination, additionalParams = {}) {

@@ -34,8 +34,10 @@ const useStyles = makeStyles((theme) => ({
 
 const useLoadListings = (authContext, page, pageSize, sort, filters) => API.fetchAccountListings(authContext, page, pageSize, sort, filters);
 
+const useLoadListingsCount = (authContext, filters) => API.fetchCountOfAccountListings(authContext, filters);
+
 function MyListings({ listings }) {
-  const { list, isLoading, page, pageSize, changeSort, setPage, setPageSize, error } = listings;
+  const { list, isLoading, page, pageSize, changeSort, setPage, setPageSize, error, totalCount } = listings;
   const history = useHistory();
   const classes = useStyles();
 
@@ -76,6 +78,7 @@ function MyListings({ listings }) {
         error={error}
         handleRowClick={handleRowClick}
         isLoading={isLoading}
+        totalCount={totalCount}
       />
     </div>
   );
@@ -85,7 +88,8 @@ export default (
   AppNavWrapper({ title: 'My Listings' })(
     PaginatedListWrapper(MyListings, useLoadListings, {
       propertyName: 'listings',
-      defaultSort: 'createdAt'
+      defaultSort: 'createdAt',
+      totalCountFn: useLoadListingsCount
     })
   )
 );

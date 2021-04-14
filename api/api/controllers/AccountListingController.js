@@ -19,11 +19,16 @@ class AccountListingController extends BaseController {
     return 'AccountListing';
   }
 
+  static get supportsCountAll() { return true; }
+
   static get Security() {
     return {
       [this.BaseRoute]: {
         get: [ROLES.STANDARD],
         post: [ROLES.STANDARD]
+      },
+      [`${this.BaseRoute}/count`]: {
+        get: [ROLES.STANDARD]
       },
       [`${this.BaseRoute}/{id}`]: {
         get: [ROLES.STANDARD],
@@ -61,6 +66,7 @@ module.exports = {
   constructor: AccountListingController,
   getAll: instance.getAllByPathIds.bind(instance),
   getById: instance.getByPathIds.bind(instance),
+  countAll: instance.countAllByPathIds.bind(instance),
   create: instance.createWithPathIds.bind(instance),
   updateById: instance.updateByPathIds.bind(instance),
   deleteById: instance.deleteByPathIds.bind(instance)

@@ -12,7 +12,6 @@ import Header from './Header';
 import Footer from './Footer';
 
 function RootContainer({ location }) {
-  console.log(location);
   const { auth } = React.useContext(authContext);
   if (!auth || !auth.id) {
     return <Redirect to={{

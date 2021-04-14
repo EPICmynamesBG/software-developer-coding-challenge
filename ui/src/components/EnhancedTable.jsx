@@ -101,7 +101,7 @@ const useToolbarStyles = makeStyles(theme => ({
         },
   title: {
     flex: '1 1 100%',
-  },
+  }
 }));
 
 const EnhancedTableToolbar = props => {
@@ -171,11 +171,19 @@ const useStyles = makeStyles(theme => ({
   cellPad: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2)
+  },
+  'table tr': {
+    cursor: 'pointer'
   }
 }));
 
 export default function EnhancedTable(props) {
-  const { rows = [], page = 0, rowsPerPage = 50, headCells = [], title, handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop, fillHeight = true, enableCheckboxes = false, handleRowClick = noop, error, isLoading = false } = props;
+  const {
+    rows = [], page = 0, rowsPerPage = 50, headCells = [], title,
+    handleSortChange = noop, handlePageChange = noop, handlePageSizeChange = noop,
+    fillHeight = true, enableCheckboxes = false, handleRowClick = noop, error,
+    isLoading = false, totalCount = -1
+  } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(headCells[0].id);
@@ -291,7 +299,6 @@ export default function EnhancedTable(props) {
                             </TableCell>
                           );
                         }
-                        console.log(row, id);
                         return <TableCell className={classes.cellPad} key={index} align="middle">{formatDisplay(get(row, id))}</TableCell>;
                       })}
                     </TableRow>
@@ -308,7 +315,7 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
-          count={-1}
+          count={totalCount}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={wrapHandlePageChange}
@@ -336,5 +343,6 @@ EnhancedTable.propTypes = {
   enableCheckboxes: PropTypes.func,
   handleRowClick: PropTypes.func,
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.instanceOf(Error)]),
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  totalCount: PropTypes.number
 };

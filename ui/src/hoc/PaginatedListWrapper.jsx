@@ -14,7 +14,8 @@ function PaginatedListWrapper(Component, fetchFn, {
   propertyName = 'data',
   defaultSort = 'id',
   defaultFilters = [],
-  defaultPageSize = 50
+  defaultPageSize = 50,
+  totalCountFn = () => Promise.resolve({})
 }) {
   return function PaginatedComponent(props) {
     const [list, setList] = useState([]);
@@ -25,6 +26,7 @@ function PaginatedListWrapper(Component, fetchFn, {
     const [pageSize, setPageSize] = useState(defaultPageSize);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
+    const [totalCount, setTotalCount] = useState(-1);
     const loadedContext = useContext(authContext);
 
     const fetchPage = async () => {
@@ -36,20 +38,37 @@ function PaginatedListWrapper(Component, fetchFn, {
         [loadedContext, page, pageSize, sortStr, filters] :
         [page, pageSize, sortStr, filters];
       try {
-        console.log('fetching', sortStr);
         setIsLoading(true);
         const data = await fetchFn(...fetchArgs);
         setList(data);
       } catch (e) {
         console.error(e);
         setError(e);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
+    const fetchTotalCount = async () => {
+      const fetchArgs = requiresAuthentication ?
+        [loadedContext, filters] :
+        [filters];
+      try {
+        const data = await totalCountFn(...fetchArgs);
+        const { results = -1 } = data;
+        setTotalCount(results);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+  
     useEffect(() => {
       fetchPage();
     }, [pageSize, filters, sortDir, sortField, page]);
+
+    useEffect(() => {
+      fetchTotalCount();
+    }, [filters]);
 
 
     const reset = () => {
@@ -74,7 +93,6 @@ function PaginatedListWrapper(Component, fetchFn, {
         setList([]);
         setPage(0);
       }
-      console.log('changed sort', field, direction);
     };
 
     const changePage = (goToPage = 0) => {
@@ -117,6 +135,7 @@ function PaginatedListWrapper(Component, fetchFn, {
         page,
         pageSize,
         filters,
+        totalCount,
         error,
         fetchData: fetchPage,
         resetList: reset,

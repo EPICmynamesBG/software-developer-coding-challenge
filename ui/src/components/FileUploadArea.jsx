@@ -6,7 +6,6 @@ function FileUploadArea(props) {
 
 
   const handleChange = (fileList) => {
-    console.log(fileList);
     onChange({
       target: {
         id: props.inputProps.id,

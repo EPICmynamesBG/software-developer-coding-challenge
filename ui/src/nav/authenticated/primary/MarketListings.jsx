@@ -16,12 +16,16 @@ const columns = [
   { id: 'endAtTimestamp', label: 'Ending At' }
 ];
 
-const useLoadListings = (authContext, page, pageSize, sort, filters) => {
+const useLoadListings = (page, pageSize, sort, filters) => {
   return API.fetchMarketListings(page, pageSize, sort, filters);
 }
 
+const useLoadListingsCount = (filters) => {
+  return API.fetchCountOfMarketListings(filters);
+}
+
 function MarketListings({ listings }) {
-  const { list, isLoading, page, pageSize, changeSort, setPage, setPageSize } = listings;
+  const { list, isLoading, page, pageSize, changeSort, setPage, setPageSize, totalCount } = listings;
   const history = useHistory();
 
   const handleSortChange = (field, direction) => {
@@ -55,6 +59,7 @@ function MarketListings({ listings }) {
         fillHeight={false}
         handleRowClick={handleRowClick}
         isLoading={isLoading}
+        totalCount={totalCount}
       />
     </div>
   )
@@ -64,7 +69,9 @@ export default (
   AppNavWrapper({ title: 'Market' })(
     PaginatedListWrapper(MarketListings, useLoadListings, {
       propertyName: 'listings',
-      defaultFilters: ['is_active[eq]=true']
+      defaultFilters: ['is_active[eq]=true'],
+      requiresAuthentication: false,
+      totalCountFn: useLoadListingsCount
     })
   )
 );

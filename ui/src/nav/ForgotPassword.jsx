@@ -50,7 +50,6 @@ function ForgotPassword() {
     try {
       setLoading(true);
       const account = await API.ForgotPassword(userEmail);
-      console.log(account);
       setSubmitted(true);
       setTimeout(() => {
         showLoginScreen(true);

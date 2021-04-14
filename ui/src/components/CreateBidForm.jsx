@@ -48,7 +48,6 @@ function CreateBidForm(props) {
 
 
   const submit = async (data = {}) => {
-    console.log(data);
     if (!auth.auth) {
       history.push('/login', {
         from: history.location.pathname

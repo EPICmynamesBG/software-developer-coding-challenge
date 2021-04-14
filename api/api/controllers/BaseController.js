@@ -50,13 +50,23 @@ class BaseController {
   }
 
   static get paginationParams() {
-    return ['sort', 'limit', 'page'];
+    return ['sort', 'page_size', 'page'];
   }
 
   async responder(action, response, asyncFn) {
     try {
       const results = await asyncFn();
       switch (_.toLower(action)) {
+      case 'count':
+        utils.handleResponse(
+          undefined,
+          {
+            action: _.toUpper(action),
+            results: results
+          },
+          response
+        );
+        break;
       case 'create':
       case 'update':
       case 'delete':
@@ -97,6 +107,17 @@ class BaseController {
     const paginationParams = _.pick(queryParams, this.constructor.paginationParams);
     const otherParams = _.omit(queryParams, this.constructor.paginationParams);
     return this.responder('select', res, () => this.service.find(pathIds, paginationParams, otherParams));
+  }
+
+  countAll(req, res) {
+    const queryParams = this.constructor.Helper.getQueryParams(req);
+    return this.responder('count', res, () => this.service.countAll(undefined, queryParams));
+  }
+
+  countAllByPathIds(req, res) {
+    const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
+    const queryParams = this.constructor.Helper.getQueryParams(req);
+    return this.responder('count', res, () => this.service.countAll(pathIds, queryParams));
   }
 
   getById(req, res) {
@@ -153,6 +174,9 @@ class BaseController {
         get: [ROLES.STANDARD],
         post: [ROLES.STANDARD]
       },
+      [`${this.BaseRoute}/count`]: {
+        get: [ROLES.STANDARD]
+      },
       [`${this.BaseRoute}/{id}`]: {
         get: [ROLES.STANDARD],
         put: [ROLES.STANDARD],
@@ -168,6 +192,8 @@ class BaseController {
   static get supportsUpdate() { return true; }
 
   static get supportsDelete() { return true; }
+
+  static get supportsCountAll() { return false; } 
 
   /**
    * @summary Generated Swagger endpoints
@@ -249,6 +275,42 @@ class BaseController {
                     default: 'CREATE'
                   },
                   [_.camelCase(this.Name)]: { $ref: `#/definitions/${this.Name}` }
+                }
+              }
+            },
+            ..._.cloneDeep(errorResponses)
+          }
+        }
+      },
+      [`${this.BaseRoute}/count`]: {
+        'x-swagger-router-controller': this.name,
+        get: {
+          summary: 'Count All',
+          operationId: 'countAll',
+          tags: [this.Name],
+          parameters: [...pathParams, 
+            {
+              $ref: '#/parameters/filters'
+            }, {
+              $ref: '#/parameters/include'
+            }
+          ],
+          consumes: this._RouteConsumes,
+          responses: {
+            200: {
+              description: 'Success',
+              schema: {
+                type: 'object',
+                required: ['results', 'action'],
+                properties: {
+                  action: {
+                    type: 'string',
+                    default: 'COUNT'
+                  },
+                  results: {
+                    type: ['string', 'number'],
+                    description: 'count of all records that can be returned with the given parameters'
+                  }
                 }
               }
             },
@@ -344,6 +406,9 @@ class BaseController {
     }
     if (!this.supportsDelete) {
       _.unset(routes, [`${this.BaseRoute}/{id}`, 'delete']);
+    }
+    if (!this.supportsCountAll) {
+      _.unset(routes, [`${this.BaseRoute}/count`]);
     }
 
     _.forEach(routes, (def, route) => {

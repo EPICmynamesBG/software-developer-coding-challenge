@@ -53,7 +53,6 @@ function CreateAccount() {
     try {
       setLoading(true);
       const account = await API.CreateAccount(userEmail, userPassword, confirmPassword);
-      console.log(account);
       setAccountCreated(true);
       setTimeout(() => {
         showLoginScreen(true);

@@ -24,11 +24,16 @@ class PublicListingController extends BaseController {
 
   static get supportsUpdate() { return false; }
 
+  static get supportsCountAll() { return true; }
+
   static get Security() {
     return {
       [this.BaseRoute]: {
         get: [],
         post: [ROLES.STANDARD]
+      },
+      [`${this.BaseRoute}/count`]: {
+        get: []
       },
       [`${this.BaseRoute}/{id}`]: {
         get: []
@@ -64,5 +69,6 @@ module.exports = {
   constructor: PublicListingController,
   getAll: instance.getAllByPathIds.bind(instance),
   getById: instance.getByPathIds.bind(instance),
+  countAll: instance.countAllByPathIds.bind(instance),
   create: instance.createWithPathIds.bind(instance)
 };

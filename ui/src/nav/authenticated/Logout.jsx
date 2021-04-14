@@ -18,7 +18,6 @@ function Logout() {
   const { showError } = useErrorHandler(null);
 
   const performLogout = async () => {
-    console.log("LOGOUT");
     try {
       setLoggingOut(true);
       await API.Logout(auth.auth.token);
