@@ -30,9 +30,18 @@ docker-compose build
 ```
 3. Initialize the database. Note if asked for a password, this is defined in the docker-compose.yaml file. The default is "postgres"
 ```
+[terminal tab 1]
 docker-compose up postgres
-[new tab]
-psql -U postgres trdrev < dump_name.sql
+
+[terminal tab 2]
+docker-compose exec postgres createdb -U postgres trdrev
+docker-compose exec postgres createdb -U postgres trdrev_test
+docker-compose exec postgres /bin/bash
+[within the container bash terminal]
+  psql -U postgres trdrev < /home/postgres/seed/schema.sql
+  psql -U postgres trdrev_test < /home/postgres/seed/schema.sql
+  exit
+[outside the container terminal now]
 docker-compose down
 [ctrl+C]
 ```
@@ -42,6 +51,7 @@ docker-compose up
 ```
 Tip: use the `-d` option to run in daemon mode and not have the process consume your terminal.
 5. Navigate to the app at `localhost:8080`
+Tip: to see API docs (powered by Swagger) go to `localhost:3000/docs`
 
 
 ### Nice to Haves

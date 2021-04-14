@@ -21,7 +21,9 @@ services:
     container_name: cron
     env_file: ./api/.env
   postgres:
-    image: postgres:13.2
+    build:
+      context: ./api
+      dockerfile: ./docker/postgres/Dockerfile
     restart: always
     expose:
       - 5432
@@ -34,7 +36,7 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
   ui:
-    build: 
+    build:
       context: ./ui
       dockerfile: ./docker/Dockerfile
     container_name: ui
