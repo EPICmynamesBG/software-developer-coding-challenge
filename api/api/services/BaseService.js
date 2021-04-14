@@ -7,9 +7,15 @@ const _ = require('lodash');
  * @type {object}
  * @property {number} page
  * @property {number} pageSize
+ * @property {string} sort
  */
 
 class BaseService {
+  /**
+   * @param {objection.QueryBuilder} query
+   * @param {Pagination} [pagination]
+   * @returns {objection.QueryBuilder}
+   */
   static applyPagination(query, pagination) {
     if (!pagination) {
       return query;
@@ -20,6 +26,11 @@ class BaseService {
       .offset(pageSize * page);
   }
 
+  /**
+   * @param {objection.Query} query
+   * @param {Pagination} [pagination]
+   * @returns {objection.Query}
+   */
   static applySort(query, pagination) {
     if (!pagination) {
       return query;
@@ -28,7 +39,11 @@ class BaseService {
       .sort(pagination.sort);
   }
 
-
+  /**
+   * @param {objection.QueryBuilder} query
+   * @param {string[]} [filters]
+   * @returns {objection.QueryBuilder}
+   */
   static applyFilters(query, filters) {
     if (!filters) {
       return query;
@@ -37,13 +52,27 @@ class BaseService {
       .filters(filters);
   }
 
+  /**
+   * @param {objection.QueryBuilder} query
+   * @param {string[]} [includes = []]
+   * @returns {objection.QueryBuilder}
+   */
   static applyInclusion(query, includes = []) {
     if (!includes) {
       return query;
     }
-    return includes.reduce((qry, inclusion) => query.withGraphFetched(inclusion), query);
+    return includes.reduce((qry, inclusion) => qry.withGraphFetched(inclusion), query);
   }
 
+  /**
+   * 
+   * @param {objection.QueryBuilder} query 
+   * @param {Pagination} [pagination] 
+   * @param {object} [additionalParams = {}]
+   * @param {string[]} [additionalParams.filters]
+   * @param {string[]} [additionalParams.include = []] 
+   * @returns 
+   */
   static applyQueryFlow(query, pagination, additionalParams = {}) {
     const applyMethods = _.flow(
       qry => this.applyFilters(qry, additionalParams.filters),
@@ -54,6 +83,10 @@ class BaseService {
     return applyMethods(query);
   }
 
+  /**
+   * 
+   * @param {function<objection.BaseModel>} modelClass objection BaseModel class or subclass
+   */
   constructor(modelClass) {
     this.modelClass = modelClass;
   }
