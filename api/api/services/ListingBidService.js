@@ -3,6 +3,7 @@
 const { HttpError } = require('../helpers/utils');
 const ListingBid = require('../models/ListingBid');
 const BaseService = require('./BaseService');
+const AccountListingService = require('./AccountListingService');
 
 class ListingBidService extends BaseService {
   constructor() {
@@ -27,6 +28,10 @@ class ListingBidService extends BaseService {
     const currentMaxBid = await this.getCurrentListingMaxBid(listingId);
     if (currentMaxBid !== null && Number.parseFloat(collection.bid_value) <= Number.parseFloat(currentMaxBid)) {
       throw new HttpError('Bid must exceed the current bid', 400, 'create');
+    }
+    const listing = await AccountListingService.getById(listingId);
+    if (listing.is_complete) {
+      throw new HttpError('This listing is complete; bids cannot be added.', 400, 'create');
     }
     return super.create(collection);
   }
