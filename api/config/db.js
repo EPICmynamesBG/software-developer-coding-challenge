@@ -10,7 +10,7 @@ class DB {
     this.knex = knex({
       client: 'pg',
       connection: config.DATABASE_CONN_DETAILS,
-      debug: process.env.NODE_ENV === 'development',
+      debug: process.env.NODE_ENV === 'development' && process.env.DEBUG_QUERIES === 'true',
       asyncStackTraces: true,
       pool: {
         min: 1,

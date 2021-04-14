@@ -1,5 +1,8 @@
 
-
+## Pre-reqs
+Have installed
+- docker
+- postgres/psql
 
 To create the database run:
 `psql -U postgres trdrev < dump_name.sql`

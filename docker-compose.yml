@@ -3,9 +3,7 @@ services:
   api:
     depends_on:
       - postgres
-      # - redis
     build:
-      # target: development
       context: ./api
       dockerfile: ./docker/api/Dockerfile
     expose:
@@ -13,22 +11,14 @@ services:
     ports:
       - 3000:3000
     container_name: api
-    volumes:
-      - ./api:/usr/src/app/
-      - api_node_modules:/usr/src/app/node_modules
     env_file: ./api/.env
   cron:
     depends_on:
       - postgres
-      # - redis
     build:
-      # target: development
       context: ./api
       dockerfile: ./docker/cron/Dockerfile
     container_name: cron
-    volumes:
-      - ./api:/usr/src/app/
-      - cron_node_modules:/usr/src/app/node_modules
     env_file: ./api/.env
   postgres:
     image: postgres:13.2
@@ -43,15 +33,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
-  # redis:
-  #   image: redis:alpine
-  #   expose:
-  #     - 6379
-  #   ports:
-  #     - 6379:6379
   ui:
     build: 
-      # target: development
       context: ./ui
       dockerfile: ./docker/Dockerfile
     container_name: ui
@@ -60,12 +43,5 @@ services:
       - 8080
     ports:
       - 8080:8080
-    volumes:
-      - ./ui/src:/usr/src/app/src
-      - ./ui/public:/usr/src/app/public
-      - ui_node_modules:/usr/src/app/node_modules
 volumes:
-  api_node_modules:
-  cron_node_modules:
-  ui_node_modules:
   pg_data:
