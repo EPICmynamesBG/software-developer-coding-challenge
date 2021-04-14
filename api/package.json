@@ -17,12 +17,6 @@
     "test": "NODE_ENV=test swagger project test",
     "posttest": "npm run lint || echo 0",
     "buildSwagger": "node ./bin/buildSwagger.js",
-    "docs:build": "documentation build src/** -f html -o docs -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
-    "docs:build:json": "documentation build src/** -f json -o docs/docs.json -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
-    "docs:build:md": "documentation build src/** -f md -o docs/docs.md -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
-    "docs:serve": "documentation serve src/** -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
-    "docs:serve:live": "documentation serve --watch src/** -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
-    "docs:lint": "documentation lint src/**",
     "lint": "eslint --ignore-path .gitignore  .",
     "lint:fix": "eslint --ignore-path .gitignore . --fix"
   },
@@ -51,7 +45,6 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
-    "documentation": "^8.1.2",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.22.1",
