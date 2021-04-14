@@ -12,7 +12,7 @@ const columns = [
   { id: 'display.title', label: 'Name' },
   { id: 'vehicleVin', label: 'VIN' },
   { id: 'vehicleNhtsaInfo.modelYear', label: 'Model Year' },
-  { id: 'createdAt', label: 'Created' },
+  { id: 'startAtTimestamp', label: 'Active as Of' },
   { id: 'endAtTimestamp', label: 'Ending At' }
 ];
 
@@ -39,7 +39,7 @@ function MarketListings({ listings }) {
   const handlePageSizeChange = (size) => {
     setPageSize(size);
   }
-  
+
   const handleRowClick = (e, row) => {
     history.push(`/market/${row.id}`);
   };

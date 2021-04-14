@@ -12,7 +12,7 @@ import { Button, makeStyles } from "@material-ui/core";
 const boolDisplay = val => val ? 'Yes' : 'No';
 const columns = [
   { id: 'vehicleVin', label: 'VIN' },
-  { id: 'createdAt', label: 'Created' },
+  { id: 'startAtTimestamp', label: 'Active as Of' },
   { id: 'isActive', label: 'Active', formatDisplay: boolDisplay },
   { id: 'isComplete', label: 'Complete', formatDisplay: boolDisplay },
   { id: 'endAtTimestamp', label: 'Ending At' }
@@ -93,4 +93,3 @@ export default (
     })
   )
 );
-

@@ -136,7 +136,7 @@ function CreateListing({ formCache = {}}) {
     formCache.saveState(newState);
     setFormState(newState);
   };
-  
+
 
   const onVinBlur = (e) => {
     API.LookupVIN(formState.vehicleVin)
@@ -156,6 +156,7 @@ function CreateListing({ formCache = {}}) {
             pattern: '/.*{17}/'
           }} required aria-required onChange={updateFormFieldValue} onBlur={onVinBlur} disabled={isLoading} defaultValue={formState.vehicleVin} />
           {nhtsaData && <NhtsaPreview {...nhtsaData} />}
+          {isLookingUpVin && <CircularProgress />}
         </FormGroup>
         <FormGroup className={classes.container}>
           <FormLabel>Display Fields</FormLabel>
