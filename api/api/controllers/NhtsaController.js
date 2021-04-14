@@ -1,22 +1,20 @@
 
 const BaseController = require('./BaseController');
 const NHTSA = require('../services/nhtsa');
-const { handleResponse } = require('../helpers/utils');
+const utils = require('../helpers/utils');
 
 async function nhtsaVinLookup(req, res) {
   const pathParams = BaseController.Helper.getPathParams(req);
   const { vin } = pathParams;
   try {
-    const output = await NHTSA.decodeVinExtended(vin);
-    console.log('NHTSA', JSON.stringify(output));
-    const { data } = output;
+    const { data } = await NHTSA.decodeVinExtended(vin);
     const formatted = NHTSA.formatVinDecode(data);
-    handleResponse(undefined, {
+    utils.handleResponse(undefined, {
       results: formatted,
       raw: data
     }, res);
   } catch (e) {
-    handleResponse(e, null, res);
+    utils.handleResponse(e, undefined, res);
   }
 }
 
