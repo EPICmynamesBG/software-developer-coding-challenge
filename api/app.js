@@ -20,8 +20,10 @@ swaggerParser.validate('./api/swagger/swagger.yaml', (err, api) => {
   middleware.afterSwagger(app, api);
 
   const port = config.PORT;
-  logger.verbose('App running on port', port);
-  app.listen(port);
+  app.server = app.listen(port, () => {
+    logger.verbose('App running on port', port);
+    app.emit('ready', null);
+  });
 });
 
 module.exports = app;

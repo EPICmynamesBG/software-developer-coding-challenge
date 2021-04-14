@@ -3,3 +3,4 @@ name: vin
 type: string
 description: vehicle identification number
 required: true
+pattern: ^[A-HJ-NPR-Z0-9]{17}$

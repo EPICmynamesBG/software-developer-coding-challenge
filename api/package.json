@@ -12,9 +12,10 @@
   "scripts": {
     "prestart": "npm run buildSwagger",
     "start": "node app.js",
-    "pretest": "eslint --ignore-path .gitignore  . || echo 0",
+    "pretest": "NODE_ENV=test npm run buildSwagger",
     "cron": "node cron.js",
-    "test": "swagger project test",
+    "test": "NODE_ENV=test swagger project test",
+    "posttest": "npm run lint || echo 0",
     "buildSwagger": "node ./bin/buildSwagger.js",
     "docs:build": "documentation build src/** -f html -o docs -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
     "docs:build:json": "documentation build src/** -f json -o docs/docs.json -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
@@ -22,6 +23,7 @@
     "docs:serve": "documentation serve src/** -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
     "docs:serve:live": "documentation serve --watch src/** -a public -a private -a protected -a undefined --config documentation.yml --theme docs_theme",
     "docs:lint": "documentation lint src/**",
+    "lint": "eslint --ignore-path .gitignore  .",
     "lint:fix": "eslint --ignore-path .gitignore . --fix"
   },
   "dependencies": {
@@ -55,6 +57,11 @@
     "eslint-plugin-import": "^2.22.1",
     "should": "^7.1.0",
     "sinon": "^10.0.0",
-    "supertest": "^3.3.0"
+    "supertest": "^3.4.2",
+    "z-schema": "^3.12.0",
+    "request": "^2.58.0",
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5",
+    "dotenv": "^1.2.0"
   }
 }
