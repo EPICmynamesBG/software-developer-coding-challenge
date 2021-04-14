@@ -40,7 +40,7 @@ class AccountListingController extends BaseController {
       const formatted = nhtsa.formatVinDecode(data);
       createObj.vehicle_nhtsa_info = snakeCaseKeys(formatted);
     }
-    return this.responder('create', res, () => this.service.create(createObj))
+    return this.responder('create', res, () => this.service.create(createObj));
   }
 
   async createWithPathIds(req, res) {

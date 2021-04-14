@@ -3,9 +3,9 @@
 const _ = require('lodash');
 const moment = require('moment');
 const crypto = require('crypto-js');
+const { promisify } = require('util');
 const { ENCRYPTION_KEY } = require('../../config/config');
 const nativeLogger = require('./logger');
-const { promisify } = require('util');
 
 /**
  * Encrypt anything
@@ -67,9 +67,9 @@ function handleDbError(err) {
   const defErr = new HttpError('Internal error', 500);
   if (!err) {
     return defErr;
-  } else if (err instanceof HttpError || err.statusCode) {
+  } if (err instanceof HttpError || err.statusCode) {
     return err;
-  } else if (err.code === '23505') {
+  } if (err.code === '23505') {
     // TODO: comment here with postgres err codes link
     return new HttpError(err.detail, 409);
   }
@@ -84,14 +84,14 @@ function handleDbError(err) {
 function snakeCaseKeys(collection) {
   let results = _.cloneDeep(collection);
   if (_.isArray(results)) {
-    results = _.map(results, obj => snakeCaseKeys(obj));
-  } else if (_.isObject(results) &&
-    !_.isDate(results) &&
-    !(results instanceof moment)) {
+    results = _.map(results, (obj) => snakeCaseKeys(obj));
+  } else if (_.isObject(results)
+    && !_.isDate(results)
+    && !(results instanceof moment)) {
     results = _.reduce(
-results, (obj, value, key) => _.set(obj, _.snakeCase(key), snakeCaseKeys(value))
-    , {}
-);
+      results, (obj, value, key) => _.set(obj, _.snakeCase(key), snakeCaseKeys(value)),
+      {}
+    );
   }
   return results;
 }
@@ -104,14 +104,14 @@ results, (obj, value, key) => _.set(obj, _.snakeCase(key), snakeCaseKeys(value))
 function camelCaseKeys(collection) {
   let results = _.cloneDeep(collection);
   if (_.isArray(results)) {
-    results = _.map(results, obj => camelCaseKeys(obj));
-  } else if (_.isObject(results) &&
-    !_.isDate(results) &&
-    !(results instanceof moment)) {
+    results = _.map(results, (obj) => camelCaseKeys(obj));
+  } else if (_.isObject(results)
+    && !_.isDate(results)
+    && !(results instanceof moment)) {
     results = _.reduce(
-results, (obj, value, key) => _.set(obj, _.camelCase(key), camelCaseKeys(value))
-    , {}
-);
+      results, (obj, value, key) => _.set(obj, _.camelCase(key), camelCaseKeys(value)),
+      {}
+    );
   }
   return results;
 }
@@ -124,7 +124,7 @@ results, (obj, value, key) => _.set(obj, _.camelCase(key), camelCaseKeys(value))
 function jsonify(collection) {
   let results = _.cloneDeep(collection);
   if (_.isArray(results)) {
-    results = _.map(results, obj => jsonify(obj));
+    results = _.map(results, (obj) => jsonify(obj));
   } else if (_.isObject(results)) {
     if (_.isFunction(results.$toJson)) {
       results = results.$toJson();
@@ -134,7 +134,6 @@ function jsonify(collection) {
   }
   return results;
 }
-
 
 /**
  * @param  {} err      [description]
@@ -150,7 +149,7 @@ function handleResponse(err, results, response) {
     if (_.isEmpty(json)) {
       response.status(204).json().end();
       return;
-    } else if (_.get(json, 'action') === 'CREATE') {
+    } if (_.get(json, 'action') === 'CREATE') {
       response.status(201).json(json).end();
       return;
     }
@@ -169,12 +168,14 @@ function handleResponse(err, results, response) {
  */
 function wrapLogger(logger, ...args) {
   if (logger._wrapped) return logger;
+  // eslint-disable-next-line no-param-reassign
   logger._wrapped = true;
   [
     'silly', 'debug', 'verbose', 'info',
     'warn', 'error', 'fatal'
   ].forEach((level) => {
     const orig = logger[level];
+    // eslint-disable-next-line no-param-reassign
     logger[level] = (...log) => orig(...args, ...log);
   });
   return logger;
@@ -186,14 +187,14 @@ function wrapLogger(logger, ...args) {
  * @return {AsyncFunction}
  */
 function promisifyMultiArgCallback(method) {
-   // eslint-disable-next-line no-param-reassign
-   method[promisify.custom] = (...args) => new Promise((resolve, reject) => {
-     method(...args, (err, ...etc) => {
-       if (err) reject(err);
-       else if (etc.length > 1) resolve(etc);
-       else resolve(...etc);
-     });
-   });
+  // eslint-disable-next-line no-param-reassign
+  method[promisify.custom] = (...args) => new Promise((resolve, reject) => {
+    method(...args, (err, ...etc) => {
+      if (err) reject(err);
+      else if (etc.length > 1) resolve(etc);
+      else resolve(...etc);
+    });
+  });
   return promisify(method);
 }
 

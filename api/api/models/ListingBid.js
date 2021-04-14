@@ -81,8 +81,10 @@ class ListingBid extends BaseModel {
   }
 
   static get relationMappings() {
+    /* eslint-disable global-require */
     const Account = require('./Account');
     const AccountListing = require('./AccountListing');
+    /* eslint-enable global-require */
 
     return {
       account: {

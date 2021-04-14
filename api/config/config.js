@@ -13,6 +13,7 @@ config.HOST_URL = `${process.env.HOST_DOMAIN || 'http://localhost'}:${process.en
 Object.assign(config, process.env);
 
 if (process.env.NODE_ENV === 'test') {
+  // eslint-disable-next-line global-require
   const testConfig = require('./test');
   Object.assign(config, testConfig);
 }

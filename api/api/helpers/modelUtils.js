@@ -28,9 +28,9 @@ function validUuid(str) {
  */
 function iterateCollection(collection, fn = _.noop) {
   if (_.isArray(collection)) {
-    return _.map(collection, o => iterateCollection(o, fn));
-  } else if (_.isPlainObject(collection)) {
-    return _.mapValues(_.cloneDeep(collection, value => iterateCollection(value, fn)))
+    return _.map(collection, (o) => iterateCollection(o, fn));
+  } if (_.isPlainObject(collection)) {
+    return _.mapValues(_.cloneDeep(collection, (value) => iterateCollection(value, fn)));
     /*
      * const clone = _.cloneDeep(collection);
      * _.forEach(clone, (value, key) => {
@@ -75,7 +75,7 @@ function iterateSchema(jsonSchema, object, fn = _.noop) {
     if (type === 'object') {
       clone[prop] = iterateSchema(schema, clone[prop], fn);
     } else if (type === 'array') {
-      clone[prop] = _.map(value, o => iterateSchema(schema, o, fn));
+      clone[prop] = _.map(value, (o) => iterateSchema(schema, o, fn));
     } else {
       const isRequired = required.includes(prop);
       const res = fn(schema, value, isRequired);
@@ -84,7 +84,6 @@ function iterateSchema(jsonSchema, object, fn = _.noop) {
   });
   return clone;
 }
-
 
 /**
  * casts valid data-times to moments
@@ -124,15 +123,15 @@ function validateUuids(jsonSchema, object) {
           message: 'Invalid UUID',
           data: {
             [format]: [
-            {
-              message: `should match format "${format}"`,
-              keyword: 'format',
-              params: {
-                format,
-                value
+              {
+                message: `should match format "${format}"`,
+                keyword: 'format',
+                params: {
+                  format,
+                  value
+                }
               }
-            }
-          ]
+            ]
           }
         });
       }
@@ -149,7 +148,7 @@ function datesToString(collection) {
   return iterateCollection(collection, (value) => {
     if (_.isDate(value)) {
       return moment(value).toISOString();
-    } else if (value instanceof moment) {
+    } if (value instanceof moment) {
       return value.toISOString();
     }
     return undefined;
@@ -174,12 +173,12 @@ function applySort(query, sort) {
 }
 
 const EQ_MAP = {
-  'eq': '=',
-  'lte': '<=',
-  'gte': '>=',
-  'gt': '>',
-  'lt': '<',
-  'not': '!='
+  eq: '=',
+  lte: '<=',
+  gte: '>=',
+  gt: '>',
+  lt: '<',
+  not: '!='
 };
 
 function convertFilterStringToArgs(filterString) {

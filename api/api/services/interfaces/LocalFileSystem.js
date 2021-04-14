@@ -45,7 +45,7 @@ class LocalFileSystem extends FileStorageInterface {
    * @return {string}
    */
   static async buildFilePath(...args) {
-    const filePath = [...args].filter(val => !_.isNil(val)).join('/');
+    const filePath = [...args].filter((val) => !_.isNil(val)).join('/');
     const path = filePath.split('/');
     path.pop();
     await promisify(fs.mkdir)(path.join('/'), { recursive: true });

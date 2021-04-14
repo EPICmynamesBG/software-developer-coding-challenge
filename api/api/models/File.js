@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const BaseModel = require('./BaseModel.js');
 const { UUID } = require('../helpers/constants');
 
@@ -52,8 +51,10 @@ class File extends BaseModel {
   }
 
   static get relationMappings() {
+    /* eslint-disable global-require */
     const Account = require('./Account');
     const AccountListing = require('./AccountListing');
+    /* eslint-enable global-require */
 
     return {
       account: {

@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const async = require('async');
 const bcrypt = require('bcrypt');
 const { SALT_ROUNDS } = require('../../config/config');
 const BaseModel = require('./BaseModel.js');

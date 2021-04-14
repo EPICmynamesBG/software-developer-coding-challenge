@@ -1,9 +1,9 @@
 'use strict';
 
 const swaggerParser = require('swagger-parser');
+const express = require('express');
 const config = require('./config/config');
 
-const express = require('express');
 const DB = require('./config/db');
 const middleware = require('./api/middleware');
 const logger = require('./api/helpers/logger');

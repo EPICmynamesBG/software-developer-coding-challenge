@@ -3,7 +3,6 @@
 require('../config/db').initModels();
 
 const logger = require('../api/helpers/logger');
-// const logger = console;
 const AccountListingService = require('../api/services/AccountListingService').constructor;
 const AccountListing = require('../api/models/AccountListing');
 
@@ -16,8 +15,8 @@ async function main() {
   const listings = await AccountListing.query()
     .select()
     .where('is_complete', false);
-  
-  const updatedStatus = listings.map(listing => AccountListingService.checkStatuses(listing, true));
+
+  const updatedStatus = listings.map((listing) => AccountListingService.checkStatuses(listing, true));
   let failures = 0;
   let successes = 0;
   for (const listing of updatedStatus) {
@@ -36,7 +35,6 @@ async function main() {
     failures
   };
 }
-
 
 main()
   .then((stats) => {

@@ -54,10 +54,10 @@ class FileController extends BaseController {
 
     routes[this.BaseRoute].post.consumes = ['multipart/form-data'];
     let postRouteParams = routes[this.BaseRoute].post.parameters;
-    postRouteParams = postRouteParams.filter(field => (field.in !== 'body'));
-    postRouteParams.push(...this.FormFields.map(field => ({ ...field, in: 'formData' })));
+    postRouteParams = postRouteParams.filter((field) => (field.in !== 'body'));
+    postRouteParams.push(...this.FormFields.map((field) => ({ ...field, in: 'formData' })));
     routes[this.BaseRoute].post.parameters = postRouteParams;
-    
+
     // Additional route generation
     const regx = /\{{1,}?(.+?)\}{1,}?/g;
     const errorResponses = {
@@ -112,8 +112,7 @@ class FileController extends BaseController {
     try {
       const pathIds = this.constructor.Helper.getPathParams(req, this.constructor.omitPathVars);
       const queryParams = this.constructor.Helper.getQueryParams(req);
-      const file = await this.service.findOne(pathIds, queryParams)
-      console.log(file);
+      const file = await this.service.findOne(pathIds, queryParams);
       const fileStream = this.service.openReadStream(file);
       res.setHeader('Content-Type', file.file_type);
       res.setHeader('Content-Length', file.file_size);

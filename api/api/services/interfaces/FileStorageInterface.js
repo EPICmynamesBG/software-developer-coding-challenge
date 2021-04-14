@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * @typedef {object} fileObject
  * @property {Buffer} buffer
@@ -24,7 +23,9 @@ class FileStorageInterface {
   }
 
   get storedAt() { return this._filePath; }
+
   get fileName() { return this._fileName; }
+
   get encoding() { return this._fileEncoding; }
 
   /**
@@ -32,7 +33,7 @@ class FileStorageInterface {
    * @async
    * @return {any} file object
    */
-  async $load() {
+  async $load() { // eslint-disable-line class-methods-use-this
     throw new Error('Not Implemented');
   }
 
@@ -52,7 +53,7 @@ class FileStorageInterface {
     return instance;
   }
 
-  openReadStream() {
+  openReadStream() { // eslint-disable-line class-methods-use-this
     throw new Error('Not Implemented');
   }
 }

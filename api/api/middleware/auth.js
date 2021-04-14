@@ -6,7 +6,6 @@ const { HttpError, handleResponse } = require('../helpers/utils');
 const { ROLES, ROLE_HEIRARCHY } = require('../helpers/constants');
 const Account = require('../models/Account');
 
-
 module.exports = async (req, res, next) => {
   const operation = _.get(req, 'swagger.operation', {});
   if (operation.security || req.headers.authorization) {
@@ -36,8 +35,8 @@ module.exports = async (req, res, next) => {
         }
 
         const pathAccountId = _.get(req, 'swagger.params.accountId');
-        if (pathAccountId &&
-          (account.role === ROLES.STANDARD && pathAccountId.value !== account.id)
+        if (pathAccountId
+          && (account.role === ROLES.STANDARD && pathAccountId.value !== account.id)
         ) {
           //  User trying to access another's resource
           throw new HttpError('Unauthorized', 403);

@@ -2,6 +2,7 @@
   "rules": {
     "comma-dangle": [2, "never"],
     "complexity": [2, 12],
+    "consistent-return": [0],
     "func-names": [0],
     "handle-callback-err": [2],
     "indent": [2,2],
@@ -29,8 +30,11 @@
   "env": {
     "es6": true,
     "node": true,
-    "browser": true,
+    "browser": false,
     "mocha": true
   },
-  "extends": ["eslint:recommended", "airbnb-base"]
+  "extends": ["eslint:recommended", "airbnb-base"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  }
 }

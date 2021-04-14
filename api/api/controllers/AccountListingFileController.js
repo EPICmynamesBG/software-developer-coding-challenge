@@ -7,9 +7,9 @@ class AccountListingFileController extends FileController {
   constructor() {
     super([
       'account',
-      props => (_.get(props, _.snakeCase('accountId'))),
+      (props) => (_.get(props, _.snakeCase('accountId'))),
       'listing',
-      props => (_.get(props, _.snakeCase('accountListingId')))
+      (props) => (_.get(props, _.snakeCase('accountListingId')))
     ]);
   }
 

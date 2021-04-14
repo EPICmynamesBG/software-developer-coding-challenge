@@ -22,7 +22,6 @@ describe('BaseService', () => {
         return mockQueryBuilder;
       };
 
-
       it('should do nothing when pagination is not provided', () => {
         const mockQueryBuilder = buildMockQueryBuilder();
 
@@ -81,13 +80,13 @@ describe('BaseService', () => {
 
     describe('applyQueryFlow', () => {
       beforeEach(() => {
-        const returnInput = input => input;
+        const returnInput = (input) => input;
         sandbox.stub(BaseService, 'applyFilters').callsFake(returnInput);
         sandbox.stub(BaseService, 'applyInclusion').callsFake(returnInput);
         sandbox.stub(BaseService, 'applySort').callsFake(returnInput);
         sandbox.stub(BaseService, 'applyPagination').callsFake(returnInput);
       });
-      
+
       it('should apply methods in sequence', () => {
         const mockQueryBuilder = {};
         const pagination = {
@@ -106,6 +105,7 @@ describe('BaseService', () => {
           BaseService.applySort,
           BaseService.applyPagination
         );
+        assert.strictEqual(output, mockQueryBuilder);
       });
     });
   });
@@ -136,7 +136,8 @@ describe('BaseService', () => {
     });
 
     describe('update', () => {
-      it('should build an update query with the specified update and filter criteria that returns the modified records');
+      it(`should build an update query with the specified
+       update and filter criteria that returns the modified records`);
     });
 
     describe('updateById', () => {

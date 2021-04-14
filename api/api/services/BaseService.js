@@ -65,26 +65,26 @@ class BaseService {
   }
 
   /**
-   * 
-   * @param {objection.QueryBuilder} query 
-   * @param {Pagination} [pagination] 
+   *
+   * @param {objection.QueryBuilder} query
+   * @param {Pagination} [pagination]
    * @param {object} [additionalParams = {}]
    * @param {string[]} [additionalParams.filters]
-   * @param {string[]} [additionalParams.include = []] 
-   * @returns 
+   * @param {string[]} [additionalParams.include = []]
+   * @returns
    */
   static applyQueryFlow(query, pagination, additionalParams = {}) {
     const applyMethods = _.flow(
-      qry => this.applyFilters(qry, additionalParams.filters),
-      qry => this.applyInclusion(qry, additionalParams.include),
-      qry => this.applySort(qry, pagination),
-      qry => this.applyPagination(qry, pagination)
+      (qry) => this.applyFilters(qry, additionalParams.filters),
+      (qry) => this.applyInclusion(qry, additionalParams.include),
+      (qry) => this.applySort(qry, pagination),
+      (qry) => this.applyPagination(qry, pagination)
     );
     return applyMethods(query);
   }
 
   /**
-   * 
+   *
    * @param {function<objection.BaseModel>} modelClass objection BaseModel class or subclass
    */
   constructor(modelClass) {

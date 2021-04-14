@@ -15,7 +15,7 @@ class AccountListingService extends BaseService {
   /**
    * Determine if a listing should be considered active
    * @param {*} record
-   * @returns 
+   * @returns
    */
   static isListingActive(record = {}) {
     if (record.is_complete) {
@@ -33,9 +33,9 @@ class AccountListingService extends BaseService {
   /**
    * Determine if a listing should be considered completed
    * @param {*} record
-   * @returns 
+   * @returns
    */
-   static isListingComplete(record = {}) {
+  static isListingComplete(record = {}) {
     if (record.is_complete) {
       return true;
     }
@@ -44,9 +44,9 @@ class AccountListingService extends BaseService {
 
   /**
    * Check a listings active and complete states. Fix them if enabled
-   * @param {AccountListing} record 
-   * @param {boolean} [fix=true] fix the status(es) if determined to be wrong 
-   * @returns 
+   * @param {AccountListing} record
+   * @param {boolean} [fix=true] fix the status(es) if determined to be wrong
+   * @returns
    */
   static checkStatuses(record = {}, fix = true) {
     const shouldBeComplete = this.isListingComplete(record);
@@ -76,7 +76,7 @@ class AccountListingService extends BaseService {
 
   static _collectionCheck(collection) {
     if (Array.isArray(collection)) {
-      return collection.map(record => this.checkStatuses(record));
+      return collection.map((record) => this.checkStatuses(record));
     }
     return this.checkStatuses(collection);
   }
@@ -89,6 +89,7 @@ class AccountListingService extends BaseService {
     return super.create(toCreate);
   }
 
+  // eslint-disable-next-line class-methods-use-this,no-unused-vars
   update(params, updateObj) {
     throw new Error('Bulk edit operation not yet supported for this object');
   }
@@ -103,10 +104,8 @@ class AccountListingService extends BaseService {
       if (updateObj.start_at_timestamp && !moment(updateObj.start_at_timestamp).isSame(existing.start_at_timestamp)) {
         throw new HttpError('Start at timestamp cannot be updated for active listings', 400, 'update');
       }
-    } else {
-      if (updateObj.start_at_timestamp && moment(updateObj.start_at_timestamp).isBefore(now)) {
-        throw new HttpError('Start at timestamp cannot be earlier than now', 400, 'update');
-      }
+    } else if (updateObj.start_at_timestamp && moment(updateObj.start_at_timestamp).isBefore(now)) {
+      throw new HttpError('Start at timestamp cannot be earlier than now', 400, 'update');
     }
     if (updateObj.end_at_timestamp && moment(updateObj.end_at_timestamp).isSameOrBefore(now)) {
       throw new HttpError('End at timestamp cannot be at or before now. Please select a later time', 400, 'update');

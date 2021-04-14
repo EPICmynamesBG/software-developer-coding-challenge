@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const assert = require('assert');
 const request = require('supertest');
 const sinon = require('sinon');
@@ -10,10 +9,16 @@ const useTestServer = require('../useTestServer');
 
 const sampleValidVin = '2G61R5S36D9155536';
 
+function assertHasProperty(object, property) {
+  assert(
+    Object.prototype.hasOwnProperty.call(object, property),
+    `object should have property "${property}"`
+  );
+}
+
 describe('/vinlookups/{vin}', function () {
   const sandbox = sinon.createSandbox();
-  let getServer = useTestServer(this);
-  const sampleValidVin = '2G61R5S36D9155536';
+  const getServer = useTestServer(this);
 
   afterEach(() => {
     sandbox.restore();
@@ -40,13 +45,13 @@ describe('/vinlookups/{vin}', function () {
           .get(`/vinlookup/${sampleValidVin}`)
           .set('Accept', 'application/json')
           .expect(200);
-        
-          assert(Object(body).hasOwnProperty('results'), 'should have result property');
-          assert(Object(body).hasOwnProperty('raw'), 'should have result property');
-  
-          assert.strictEqual(typeof body.results, 'object');
-          assert.strictEqual(typeof body.raw, 'object');
-        });
+
+        assertHasProperty(body, 'results');
+        assertHasProperty(body, 'raw');
+
+        assert.strictEqual(typeof body.results, 'object');
+        assert.strictEqual(typeof body.raw, 'object');
+      });
     });
 
     context('400', () => {
@@ -55,8 +60,9 @@ describe('/vinlookups/{vin}', function () {
           .get('/vinlookup/invalid')
           .set('Accept', 'application/json')
           .expect(400);
-        assert(Object(body).hasOwnProperty('message'), 'should have message property');
-        assert(Object(body).hasOwnProperty('statusCode'), 'should have statusCode property');
+
+        assertHasProperty(body, 'message');
+        assertHasProperty(body, 'statusCode');
 
         assert.strictEqual(typeof body.message, 'string');
         assert.strictEqual(body.statusCode, 400);
@@ -70,9 +76,9 @@ describe('/vinlookups/{vin}', function () {
           .get(`/vinlookup/${sampleValidVin}`)
           .set('Accept', 'application/json')
           .expect(500);
-        
-        assert(Object(body).hasOwnProperty('message'), 'should have message property');
-        assert(Object(body).hasOwnProperty('statusCode'), 'should have statusCode property');
+
+        assertHasProperty(body, 'message');
+        assertHasProperty(body, 'statusCode');
 
         assert.strictEqual(body.message, 'Internal error');
         assert.strictEqual(body.statusCode, 500);

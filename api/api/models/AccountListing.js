@@ -2,8 +2,7 @@
 
 const _ = require('lodash');
 const BaseModel = require('./BaseModel.js');
-const { UUID, VIN, YEAR } = require('../helpers/constants');
-const nhtsa = require('../services/nhtsa');
+const { UUID, VIN } = require('../helpers/constants');
 
 class AccountListing extends BaseModel {
   static get tableName() {
@@ -80,12 +79,12 @@ class AccountListing extends BaseModel {
     return schema;
   }
 
-
   static get relationMappings() {
+    /* eslint-disable global-require */
     const Account = require('./Account');
-    const CustomField = require('./CustomField');
     const File = require('./File');
     const ListingBid = require('./ListingBid');
+    /* eslint-enable global-require */
 
     return {
       account: {
@@ -94,18 +93,6 @@ class AccountListing extends BaseModel {
         join: {
           from: `${this.tableName}.account_id`,
           to: `${Account.tableName}.id`
-        }
-      },
-      customFields: {
-        relation: BaseModel.ManyToManyRelation,
-        modelClass: CustomField,
-        join: {
-          from: `${this.tableName}.id`,
-          through: {
-            from: 'account_vehicles_custom_fields.account_vehicle_id',
-            to: 'account_vehicles_custom_fields.custom_field_id'
-          },
-          to: `${CustomField.tableName}.id`
         }
       },
       photos: {
@@ -123,7 +110,7 @@ class AccountListing extends BaseModel {
           from: `${this.tableName}.id`,
           to: `${ListingBid.tableName}.account_listing_id`
         },
-        filter: query => query
+        filter: (query) => query
           .orderBy('bid_value', 'desc')
           .limit(1)
       }

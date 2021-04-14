@@ -24,7 +24,7 @@ describe('utils', () => {
       const reversed = utils.decrypt(encrypted);
       assert.strictEqual(input, reversed);
     });
-    
+
     it('should stringify then encrypt a non-string', () => {
       const input = { hello: 'world' };
       const encrypted = utils.encrypt(input);
@@ -63,7 +63,7 @@ describe('utils', () => {
     });
 
     context('object decryption', () => {
-      const input =  { hello: 'world' };
+      const input = { hello: 'world' };
       let encrypted;
 
       before(() => {

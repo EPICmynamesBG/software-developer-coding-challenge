@@ -15,7 +15,7 @@
     "pretest": "NODE_ENV=test npm run buildSwagger",
     "cron": "node cron.js",
     "test": "NODE_ENV=test swagger project test",
-    "posttest": "npm run lint || echo 0",
+    "posttest": "npm run lint",
     "buildSwagger": "node ./bin/buildSwagger.js",
     "lint": "eslint --ignore-path .gitignore  .",
     "lint:fix": "eslint --ignore-path .gitignore . --fix"
@@ -45,8 +45,8 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
-    "eslint": "^5.9.0",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "should": "^7.1.0",
     "sinon": "^10.0.0",

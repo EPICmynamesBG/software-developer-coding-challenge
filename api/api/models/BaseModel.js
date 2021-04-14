@@ -1,9 +1,13 @@
+/* eslint-disable max-classes-per-file */
+
 'use strict';
 
 const _ = require('lodash');
 const { Model } = require('objection');
 const { HttpError } = require('../helpers/utils');
-const { castDateTimeToMoment, validateUuids, datesToString, convertFilterStringToArgs, applySort } = require('../helpers/modelUtils');
+const {
+  castDateTimeToMoment, validateUuids, datesToString, convertFilterStringToArgs, applySort
+} = require('../helpers/modelUtils');
 
 class BaseQueryBuilder extends Model.QueryBuilder {
   logQuery() {
@@ -89,8 +93,10 @@ class BaseModel extends Model {
 
   $formatJson(json) {
     // Remember to call the super class's implementation.
+    /* eslint-disable no-param-reassign */
     json = super.$formatJson(json);
     json = datesToString(json);
+    /* eslint-enable no-param-reassign */
     return json;
   }
 
@@ -115,3 +121,5 @@ class BaseModel extends Model {
 }
 
 module.exports = BaseModel;
+
+/* eslint-enable max-classes-per-file */

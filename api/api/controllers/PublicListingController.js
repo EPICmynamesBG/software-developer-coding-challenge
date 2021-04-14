@@ -21,6 +21,7 @@ class PublicListingController extends BaseController {
   }
 
   static get supportsDelete() { return false; }
+
   static get supportsUpdate() { return false; }
 
   static get Security() {
@@ -42,7 +43,7 @@ class PublicListingController extends BaseController {
       const formatted = nhtsa.formatVinDecode(data);
       createObj.vehicle_nhtsa_info = snakeCaseKeys(formatted);
     }
-    return this.responder('create', res, () => this.service.create(createObj))
+    return this.responder('create', res, () => this.service.create(createObj));
   }
 
   async createWithPathIds(req, res) {

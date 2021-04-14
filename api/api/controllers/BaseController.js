@@ -72,11 +72,10 @@ class BaseController {
     } catch (e) {
       utils.handleResponse(e, undefined, response);
     }
-    return;
   }
 
   create(req, res) {
-    return this.responder('create', res, () =>  this.service.create(utils.snakeCaseKeys(req.body)))
+    return this.responder('create', res, () => this.service.create(utils.snakeCaseKeys(req.body)));
   }
 
   createWithPathIds(req, res) {
@@ -167,6 +166,7 @@ class BaseController {
   }
 
   static get supportsUpdate() { return true; }
+
   static get supportsDelete() { return true; }
 
   /**

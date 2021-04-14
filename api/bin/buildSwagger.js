@@ -39,10 +39,11 @@ const replaceVars = (yaml) => {
 
 /**
  * Modifies the incoming schema to remove encrypted fields
- * @param {object} schema 
+ * @param {object} schema
  * @returns the modified schema input
  */
 function stripEncrypted(schema) {
+  /* eslint-disable no-param-reassign */
   if (schema['x-encrypt']) {
     // Remove internal/encrypted properties from Swagger definition
     schema['x-encrypt'] = _.map(schema['x-encrypt'], _.camelCase);
@@ -53,6 +54,7 @@ function stripEncrypted(schema) {
     // Remove the x-encrypt from Swagger definition
     _.unset(schema, 'x-encrypt');
   }
+  /* eslint-enable no-param-reassign */
   return schema;
 }
 
@@ -71,9 +73,10 @@ function APIInjection(api) {
   });
 
   const camelCaseRequired = (schema) => {
+    // eslint-disable-next-line no-param-reassign
     schema.required = _.map(schema.required, _.camelCase);
     return schema;
-  }
+  };
 
   // Bind models jsonSchema to definitions
   _.forEach(models, (model, modelName) => {

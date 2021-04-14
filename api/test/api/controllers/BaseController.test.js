@@ -70,9 +70,9 @@ describe('BaseController', () => {
           '//{id}': {
             get: [ROLES.STANDARD],
             put: [ROLES.STANDARD],
-            delete: [ROLES.STANDARD]    
+            delete: [ROLES.STANDARD]
           }
-        })
+        });
       });
     });
 

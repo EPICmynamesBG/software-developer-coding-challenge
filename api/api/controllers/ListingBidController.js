@@ -32,13 +32,12 @@ class ListingBidController extends BaseController {
     };
   }
 
-
   create(req, res) {
     const payload = {
       ...req.body,
       account_id: req.account.id
     };
-    return this.responder('create', res, this.service.create(payload))
+    return this.responder('create', res, this.service.create(payload));
   }
 
   createWithPathIds(req, res) {

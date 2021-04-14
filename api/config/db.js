@@ -15,8 +15,8 @@ class DB {
       pool: {
         min: 1,
         max: 20,
-        afterCreate: function (conn, done) {
-          conn.query('SET timezone="UTC";', function (err) {
+        afterCreate(conn, done) {
+          conn.query('SET timezone="UTC";', (err) => {
             done(err, conn);
           });
         }

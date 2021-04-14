@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const assert = require('assert');
 const sinon = require('sinon');
 
 const NhtsaController = require('../../../api/controllers/NhtsaController');
@@ -43,7 +42,7 @@ describe('NhtsaController', () => {
 
     it('should use the path vin to request extended vin info', async () => {
       await NhtsaController.nhtsaVinLookup(sampleReq, mockRes);
-      
+
       sinon.assert.calledWith(NHTSA.decodeVinExtended, sampleVin);
       sinon.assert.calledWith(NHTSA.formatVinDecode, decodeResponse.data);
 
@@ -59,11 +58,11 @@ describe('NhtsaController', () => {
       NHTSA.decodeVinExtended.rejects(err);
 
       await NhtsaController.nhtsaVinLookup(sampleReq, mockRes);
-      
+
       sinon.assert.calledWith(NHTSA.decodeVinExtended, sampleVin);
       sinon.assert.notCalled(NHTSA.formatVinDecode);
 
       sinon.assert.calledWith(utils.handleResponse, err, undefined, mockRes);
     });
-  }); 
+  });
 });

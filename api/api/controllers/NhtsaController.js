@@ -1,4 +1,3 @@
-
 const BaseController = require('./BaseController');
 const NHTSA = require('../services/nhtsa');
 const utils = require('../helpers/utils');

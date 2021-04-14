@@ -1,10 +1,7 @@
 'use strict';
 
-const { promisify } = require('util');
 const _ = require('lodash');
-const fs = require('fs');
 
-const utils = require('../helpers/utils');
 const File = require('../models/File');
 const BaseService = require('./BaseService');
 const LocalFileSystem = require('./interfaces/LocalFileSystem');
