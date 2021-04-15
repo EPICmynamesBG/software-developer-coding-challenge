@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as moment from 'moment';
 import { useHistory } from 'react-router-dom';
 
 /** Utils */
@@ -12,8 +13,8 @@ const columns = [
   { id: 'display.title', label: 'Name' },
   { id: 'vehicleVin', label: 'VIN' },
   { id: 'vehicleNhtsaInfo.modelYear', label: 'Model Year' },
-  { id: 'startAtTimestamp', label: 'Active as Of' },
-  { id: 'endAtTimestamp', label: 'Ending At' }
+  { id: 'startAtTimestamp', label: 'Active as Of', formatDisplay: val => moment(val).format('YYYY-MM-DD') },
+  { id: 'endAtTimestamp', label: 'Ending', formatDisplay: val => moment(val).fromNow() }
 ];
 
 const useLoadListings = (page, pageSize, sort, filters) => {

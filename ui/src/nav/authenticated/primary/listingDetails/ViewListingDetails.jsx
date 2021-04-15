@@ -1,4 +1,5 @@
 import { lighten, makeStyles, Typography } from '@material-ui/core';
+import * as moment from 'moment';
 import * as React from 'react';
 import get from 'lodash/get';
 import BidList from '../../../../components/BidList';
@@ -73,7 +74,7 @@ export default function ViewListingDetails({ listing }) {
       </Typography>}
       {isComplete && winningBid && <Bid className={classes.winningBid} {...winningBid} />}
       {isActive && <Typography color="inherit" variant="subtitle1">
-          Bidding ends at {endAtTimestamp}
+          Bidding ends {moment(endAtTimestamp).fromNow()}
         </Typography>}
       <Typography color="inherit" variant="h6">
         {vehicleVin}

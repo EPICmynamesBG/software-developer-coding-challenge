@@ -1,4 +1,5 @@
-import * as React from "react";
+import * as React from 'react';
+import * as moment from 'moment';
 import { Link, useHistory } from 'react-router-dom';
 
 /** Utils */
@@ -10,12 +11,13 @@ import EnhancedTable from '../../../components/EnhancedTable';
 import { Button, makeStyles } from "@material-ui/core";
 
 const boolDisplay = val => val ? 'Yes' : 'No';
+
 const columns = [
   { id: 'vehicleVin', label: 'VIN' },
-  { id: 'startAtTimestamp', label: 'Active as Of' },
+  { id: 'startAtTimestamp', label: 'Active as Of', formatDisplay: val => moment(val).format('YYYY-MM-DD') },
   { id: 'isActive', label: 'Active', formatDisplay: boolDisplay },
   { id: 'isComplete', label: 'Complete', formatDisplay: boolDisplay },
-  { id: 'endAtTimestamp', label: 'Ending At' }
+  { id: 'endAtTimestamp', label: 'Ending', formatDisplay: val => moment(val).fromNow() }
 ];
 
 const useStyles = makeStyles((theme) => ({

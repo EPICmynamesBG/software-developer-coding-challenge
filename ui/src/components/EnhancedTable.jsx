@@ -294,7 +294,7 @@ export default function EnhancedTable(props) {
                       </TableCell>}
                       {headCells.map(({ id, formatDisplay = val => val }, index) => {
                         return (
-                          <TableCell className={classes.cellPad} key={id} component="tr" id={labelId} align="middle" scope="row" padding="none">
+                          <TableCell className={classes.cellPad} key={id} id={labelId} align="justify" scope="row" padding="10">
                             {formatDisplay(get(row, id))}
                           </TableCell>
                         );

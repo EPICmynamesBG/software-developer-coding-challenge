@@ -155,11 +155,8 @@ export function timestampToDatetimeLocalInputString(timestamp) {
 }
 
 export function localeDatetimeToISOString(localTimestamp) {
-  console.log(localTimestamp);
   // https://stackoverflow.com/a/66558369
   const fakeUtcTime = new Date(`${localTimestamp}Z`);
-  console.log(fakeUtcTime);
   const d = new Date(fakeUtcTime.getTime() + fakeUtcTime.getTimezoneOffset() * 60000);
-  console.log(d);
   return d.toISOString();
 }
