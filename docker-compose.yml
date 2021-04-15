@@ -11,7 +11,11 @@ services:
     ports:
       - 3000:3000
     container_name: api
+    volumes:
+      - ./api:/usr/src/app/
+      - /usr/src/app/node_modules
     env_file: ./api/.env
+    command: "npm run nodemon"
   cron:
     depends_on:
       - postgres
@@ -20,6 +24,9 @@ services:
       dockerfile: ./docker/cron/Dockerfile
     container_name: cron
     env_file: ./api/.env
+    volumes:
+      - ./api:/usr/src/app/
+      - /usr/src/app/node_modules
   postgres:
     build:
       context: ./api
@@ -45,5 +52,8 @@ services:
       - 8080
     ports:
       - 8080:8080
+    volumes:
+      - ./ui:/usr/src/app/
+      - /usr/src/app/node_modules
 volumes:
   pg_data:

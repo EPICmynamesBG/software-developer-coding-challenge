@@ -12,6 +12,7 @@
   "scripts": {
     "prestart": "npm run buildSwagger",
     "start": "node app.js",
+    "nodemon": "nodemon --config nodemon.config.json",
     "pretest": "NODE_ENV=test npm run buildSwagger",
     "cron": "node cron.js",
     "test": "NODE_ENV=test swagger project test",
@@ -21,7 +22,6 @@
     "lint:fix": "eslint --ignore-path .gitignore . --fix"
   },
   "dependencies": {
-    "async": "^2.6.1",
     "bcrypt": "^3.0.2",
     "cors": "^2.8.5",
     "crypto-js": "^3.1.9-1",
@@ -45,16 +45,18 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
+    "chai": "^3.0.0",
+    "dotenv": "^1.2.0",
     "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "mocha": "^2.2.5",
+    "nodemon": "^2.0.7",
+    "request": "^2.58.0",
     "should": "^7.1.0",
     "sinon": "^10.0.0",
     "supertest": "^3.4.2",
-    "z-schema": "^3.12.0",
-    "request": "^2.58.0",
-    "chai": "^3.0.0",
-    "mocha": "^2.2.5",
-    "dotenv": "^1.2.0"
+    "swagger": "^0.7.5",
+    "z-schema": "^3.12.0"
   }
 }

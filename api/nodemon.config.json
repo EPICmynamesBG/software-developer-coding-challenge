@@ -1,0 +1,7 @@
+{
+  "watch": ["api/", "config/", "app.js", "cron.js"],
+  "delay": "1000",
+  "execMap": {
+    "js": "npm run prestart && node app.js"
+  }
+}

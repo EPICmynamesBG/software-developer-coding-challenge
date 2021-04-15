@@ -106,7 +106,7 @@ class BaseService {
       .first();
     query = _.flow(
       (qry) => this.constructor.applyFilters(qry, additionalParams.filters),
-      (qry) => this.constructor.applyInclusion(qry, additionalParams.include),
+      (qry) => this.constructor.applyInclusion(qry, additionalParams.include)
     )(query);
     const { count = '0' } = await query;
     try {

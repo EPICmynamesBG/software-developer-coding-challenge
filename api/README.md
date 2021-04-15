@@ -27,3 +27,5 @@ For the test database, alter and run::
 To dump updated schema:
 `pg_dump --host localhost --port 5432 --username "postgres" --schema-only   --verbose --file "./api/config/schema.sql" "trdrev"`
 
+### Running Tests
+`docker-compose run --rm api npm test`

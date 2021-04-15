@@ -62,7 +62,7 @@ class BaseController {
           undefined,
           {
             action: _.toUpper(action),
-            results: results
+            results
           },
           response
         );
@@ -193,7 +193,7 @@ class BaseController {
 
   static get supportsDelete() { return true; }
 
-  static get supportsCountAll() { return false; } 
+  static get supportsCountAll() { return false; }
 
   /**
    * @summary Generated Swagger endpoints
@@ -288,7 +288,8 @@ class BaseController {
           summary: 'Count All',
           operationId: 'countAll',
           tags: [this.Name],
-          parameters: [...pathParams, 
+          parameters: [
+            ...pathParams, 
             {
               $ref: '#/parameters/filters'
             }, {
