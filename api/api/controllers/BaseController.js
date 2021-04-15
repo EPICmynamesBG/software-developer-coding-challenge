@@ -289,7 +289,7 @@ class BaseController {
           operationId: 'countAll',
           tags: [this.Name],
           parameters: [
-            ...pathParams, 
+            ...pathParams,
             {
               $ref: '#/parameters/filters'
             }, {

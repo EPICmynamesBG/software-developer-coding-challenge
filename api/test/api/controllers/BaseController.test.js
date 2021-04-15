@@ -67,6 +67,9 @@ describe('BaseController', () => {
             get: [ROLES.STANDARD],
             post: [ROLES.STANDARD]
           },
+          '//count': {
+            get: [ROLES.STANDARD]
+          },
           '//{id}': {
             get: [ROLES.STANDARD],
             put: [ROLES.STANDARD],

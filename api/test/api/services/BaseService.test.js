@@ -5,6 +5,9 @@ const sinon = require('sinon');
 
 const BaseService = require('../../../api/services/BaseService');
 
+// random model chosen for testing purposes
+const Account = require('../../../api/models/Account');
+
 describe('BaseService', () => {
   const sandbox = sinon.createSandbox();
 
@@ -51,7 +54,7 @@ describe('BaseService', () => {
 
         const output = BaseService.applyPagination(mockQueryBuilder, {
           page: 2,
-          pageSize: 20
+          page_size: 20
         });
 
         assert.strictEqual(output, mockQueryBuilder, 'output should be the provided input query builder');
@@ -112,11 +115,18 @@ describe('BaseService', () => {
 
   describe('instance', () => {
     describe('constructor', () => {
-      it('should instantiate with properties');
+      it('should instantiate with properties', () => {
+        const instance = new BaseService(Account);
+        assert.strictEqual(instance.modelClass, Account);
+      });
     });
 
     describe('create', () => {
       it('should build and return an insert query');
+    });
+
+    describe('countAll', () => {
+      it('should build a select count query and applyFilters + applyInclusion');
     });
 
     describe('getAll', () => {
