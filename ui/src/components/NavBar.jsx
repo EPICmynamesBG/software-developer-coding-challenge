@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import get from 'lodash/get';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
@@ -24,7 +25,7 @@ const primary = [
 ];
 
 const secondary = [
-  { name: 'Logout', route: '/logout' }
+  { name: 'Logout', route: '/logout', showIf: ({ auth }) => !!auth }
 ];
 
 
@@ -66,6 +67,10 @@ const useStyles = makeStyles(theme => ({
   },
   login: {
     color: 'white'
+  },
+  titlePad: {
+    padding: theme.spacing(1),
+    textAlign: 'center'
   }
 }));
 
@@ -82,10 +87,10 @@ function NavBar({ pageTitle, pageClass, children }) {
   const drawer = (
     <div>
       <div className={classes.toolbar}>
-        <Typography variant="h6" >
+        <Typography variant="h5" className={classes.titlePad}>
           trdrev
         </Typography>
-        <Typography variant="subtitle1" >
+        <Typography variant="subtitle1" className={classes.titlePad} >
           v{version}
         </Typography>
       </div>
@@ -99,7 +104,7 @@ function NavBar({ pageTitle, pageClass, children }) {
       </List>
       <Divider />
       <List>
-        {secondary.map(({ name, route }) => (
+        {secondary.filter(({ showIf = () => {} }) => showIf({ auth, mobileOpen })).map(({ name, route }) => (
           <ListItem button key={name} component={Link} to={route}>
             <ListItemText primary={name} />
           </ListItem>

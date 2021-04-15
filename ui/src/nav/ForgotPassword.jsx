@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 15,
     '& > *': {
       margin: theme.spacing(2),
-      width: '50ch'
+      width: '30ch'
     }
   },
   container: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 15,
     '& > *': {
       margin: theme.spacing(2),
-      width: '50ch'
+      width: '30ch'
     }
   },
   button: {
