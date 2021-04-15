@@ -6,25 +6,32 @@ This is a coding challenge for software developer applicants applying through ht
 
 #### You have been tasked with building a simple online car auction system which will allow users to bid on cars for sale and with the following funcitionalies: 
 
-  - [ ] Fork this repo. Keep it public until we have been able to review it.
-  - [ ] A simple auction bidding system
-  - [ ] Record a user's bid on a car
-  - [ ] Get the current winning bid for a car
-  - [ ] Get a car's bidding history 
+  - [x] Fork this repo. Keep it public until we have been able to review it.
+  - [x] A simple auction bidding system
+  - [x] Record a user's bid on a car
+  - [x] Get the current winning bid for a car
+  - [x] Get a car's bidding history 
 
  ### Bonus:
 
-  - [ ] Unit Tests on the above functions
-  - [ ] Develop a UI on web or mobile or CLI to showcase the above functionality
+  - [x] Unit Tests on the above functions
+  - [x] Develop a UI on web or mobile or CLI to showcase the above functionality
 
 ## Evaluation:
 
- - [ ] Solution compiles. Provide a README to run/build the project and explain anything that you leave aside
+ - [x] Solution compiles. Provide a README to run/build the project and explain anything that you leave aside
+    - see SETUP.md
  - [ ] No crashes, bugs, compiler warnings
- - [ ] App operates as intended
- - [ ] Conforms to SOLID principles
- - [ ] Code is easily understood and communicative
+    - no known bugs or compiler warnings. however, known warnings are:
+      - on the backend, a dependency is generating a circular dependency warning
+      - in the UI, React is generating hook warnings. Given more time, I would prefer to restructure things to resolve these, but the "recommended" solution actually creates bugs, so these were intentionally left alone for now.
+ - [x] App operates as intended
+ - [x] Conforms to SOLID principles
+    - I believe the backend does this
+ - [x] Code is easily understood and communicative
  - [ ] Commit history is consistent, easy to follow and understand
+    - starting a project from scratch tends to make my commit patterns and work more scattered vs working in an ongoing build. Towards the end my commits became smaller and more alike that which I usually do, but first half of the project commits are definitely messy. 
+
 
 -------------
 -------------
@@ -32,9 +39,23 @@ This is a coding challenge for software developer applicants applying through ht
 
 Implementing within Docker for easier launch flow. Additionally provides simpler scalability in dev environment when additional services are added.
 
+### Docker Services
+- postgres
+  - database; app dependency
+  - setup guide provided for initializing database and schema
+- api
+  - provides the API service and endpoint docs
+  - has "extra" features like file upload/storage and NHTSA VIN lookup/decoding
+- ui
+  - provides the react ui. features dev hot reloading
+- cron
+  - check and update/manage listing states (active, complete)
+
 ## Backend
 
-Levaging Sails.js framework for NodeJS for accelerated development, and passport.js for user profile managment. 
+~Leveraging Sails.js framework for NodeJS for accelerated development, and passport.js for user profile managment.~
+This initial intent was scrapped in favor of a framework I had pre-developed for another personal project that leveraged swagger+express and a home built JWT auth solution. 
+
 
 ### Architecture/Schema
 
@@ -43,7 +64,7 @@ users|
 id|
 username/email|
 password|
-created_at_timestamp=now()|
+created_at=now()|
 reset_token|
 
 user_listings|
@@ -51,21 +72,20 @@ user_listings|
 id|
 user_id|
 vehicle_vin|
-vehicle_info|
-created_at_timestamp=now()|
+display_info|
+vehicle_nhtsa_info|
+created_at=now()|
 start_at_timestamp=now()|
-start_at_price=0|
-end_date|
+end_at_timestamp|
 is_active=FALSE|
 is_complete=FALSE|
-winning_bid_id=NULL|
 
 user_bid|
 :----
 id|
 user_id|
 user_listing_id|
-created_at_timestamp|
+created_at=now()|
 bid_value|
 currency=USD|
 
@@ -128,12 +148,16 @@ Mobile-first design
 #### Unauthenticated
 - Login
 - Sign up
+- Market Listings (active listings only)
+  - Listing Details
+    - bid history
 
 ### Authenticated
-- Active Listings
-  - most recent at top
 - My Listings
+  - view all user owned listings regardless of status
+- Create Listing
+  - File Upload
+  - VIN Decode/lookup
+  - general listing info
 - Listing Detail Page
-  - Bid form
-  - winning bid
-  - bid history
+  - post a Bid
